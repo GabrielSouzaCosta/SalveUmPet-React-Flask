@@ -12,7 +12,6 @@ function App() {
   return (
     <div>
 
-      <Navbar />
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />
@@ -21,7 +20,7 @@ function App() {
           <Route path='/login' element={<Login />} />
         </Routes>
       </BrowserRouter>
-      <Footer />
+     
 
     </div>
   )
