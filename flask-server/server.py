@@ -3,10 +3,13 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-@app.route("/")
+animalsImages = {"cats": [], "dogs": []}
+
+
+@app.route('/')
 def index():
-    render_template('index.js')
+    pass
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=False)

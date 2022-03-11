@@ -4,24 +4,10 @@ import Navbar from '../Navbar'
 export default function Login() {
   return (
         <>
-            <nav className="navbar navbar-expand-md bg-light">
-            <div className="container-fluid">
-                <ul className="navbar-nav">
-                    <li className="nav-item"><a className="nav-brand" href="/"><img height={"50px"} src="assets/images/logo.png"/></a></li>
-                    <li className="nav-item"><a className="nav-link d-inline-block text-black fs-5" href="http://localhost:3000/cats"><img height={"50px"} src="assets/images/cat.png" alt="" /> Salve Um Gato </a></li>
-                    <li className="nav-item"><a className="nav-link d-inline-block text-black fs-5" href="http://localhost:3000/dogs">Salve um Dog <img height={"50px"} src="assets/images/dog.png" alt="" /></a></li>
-                </ul>
-                <div className="justify-content-end">
-                    <ul className="navbar-nav" >
-                        <li className="nav-item"><a className="nav-link text-black fs-5" href="http://localhost:3000/login">Login</a></li>
-                        <li className="nav-item"><a className="nav-link text-black fs-5" href="">Registrar-se</a></li>                    
-                    </ul>
-                </div>
-            </div>
-            </nav>
+            <Navbar/>
 
                        
-            <div className="container-fluid vh-100 justify-content-center">
+            <div className="container-fluid vh-100 justify-content-center position-absolute top-0">
                 <div className="row d-flex justify-content-center align-items-center h-100">
                     <div className="col-12 col-sm-12 col-lg-3">
                         <div className="card">

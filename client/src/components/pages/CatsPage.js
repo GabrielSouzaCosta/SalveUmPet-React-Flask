@@ -1,23 +1,46 @@
 import React from 'react'
+import Navbar from '../Navbar'
 
 export default function CatsPage() {
   return (
-    <div className="container">
-        <div className="animals">
-            <h1>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
-            <div className="pets">
-                <li><a href=""><img src="assets/images/juquinha.jpeg" alt="" /></a></li>
-                <li><a href=""><img src="assets/images/cats/filhote2.jpeg" alt=""/></a></li>
-                <li><a href=""><img src="assets/images/goiabinha.jpeg" alt="goiabinha" /></a></li>
-                <li><a href=""><img src="assets/images/cats/filhote4.jpeg" alt=""/></a></li>
-                <li><a href=""><img src="assets/images/gaia.jpeg" alt=""/></a></li>
-                <li><a href=""><img src="assets/images/jose_gaia.jpeg" alt=""/></a></li>
-                <li><a href=""><img src="assets/images/kitten.jpg" alt=""/></a></li>
-                <li><a href=""><img src="assets/images/cats/filhote1.jpeg" alt=""/></a></li>
-                <li><a href=""><img src="assets/images/cats/filhote3.jpeg" alt=""/></a></li>
+    <>
+    
+    <Navbar />
+    <div className="container-fluid">
+        <h1 className='display-4 text-center mb-5 mt-3'>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
+          <div className='row'>
+                <div className='col-sm-3'>
+                  <div className="card">
+                    <div className='card-header text-center display-6'>Goiabinha</div>
+                    <a href=""><img className="card-img-top" src="assets/images/goiabinha.jpeg" alt=""/></a>
+                    <div className="card-body text-center fs-4">
+                      <p className="card-text">Distância: 0,4km</p>
+                      <p className="card-text">Idade: 6 meses</p>
+                      <p className="card-text fs-5">Um gatinho muito brincalhão e carinhoso</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                      2 dias atrás
+                    </div>
+                  </div>
+                </div>
 
-            </div>
-        </div>
+                <div className='col-sm-3'>
+                  <div className="card">
+                    <div className='card-header text-center display-6'>Juquinha</div>
+                    <a href=""><img className="card-img-top" src="assets/images/juquinha.jpeg" alt=""/></a>
+                    <div className="card-body text-center fs-4">
+                      <p className="card-text">Distância: 0,1km</p>
+                      <p className="card-text">Idade: 6 meses</p>
+                      <p className="card-text fs-5">O melhor gato do mundo</p>
+                    </div>
+                    <div class="card-footer text-muted">
+                      2 dias atrás
+                    </div>
+                  </div>
+                </div>
+          </div>
     </div>
+
+    </>
   )
 }

@@ -12,7 +12,7 @@ export default function Home() {
                         <div className='container-sm d-flex flex-column text-center justify-content-center h-100 w-50'>
                             <h1 className='display-3 '>Adote um pet facilmente e torne sua vida mais feliz</h1>
                             <p className='display-6 lead p-1'>Encontre ou doe gatos e cachorros para pessoas na sua cidade ou próximas de você</p>
-                            <p><button className='btn btn-danger m-2'>Adotar um pet ou doar um pet</button> <button className='btn btn-success'>ONG's de Doação</button></p>
+                            <p><button className='btn btn-outline-danger m-2'>Adotar um pet ou doar um pet</button> <button className='btn btn-outline-success'>ONG's de Doação</button></p>
                         </div>
                     </div>
 
