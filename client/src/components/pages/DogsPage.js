@@ -1,5 +1,6 @@
 import React from 'react'
 import Navbar from '../Navbar'
+import Footer from '../Footer'
 
 export default function DogsPage() {
   return (
@@ -40,6 +41,8 @@ export default function DogsPage() {
                   </div>
             </div>
       </div>
+
+      <Footer />
 
     </>
   )
