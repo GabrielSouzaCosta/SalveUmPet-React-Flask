@@ -58,3 +58,14 @@ def delete_post(id):
 
      return animal_schema.jsonify(animal)
 
+@app.route('/animals/cats', methods = ['GET'])
+def get_cats():
+     cats = Animal.query.filter(Animal.category == "gato")
+     results = animals_schema.dump(cats)
+     return jsonify(results)
+
+@app.route('/animals/dogs', methods = ['GET'])
+def get_dogs():
+     dogs = Animal.query.filter(Animal.category == "dog")
+     results = animals_schema.dump(dogs)
+     return jsonify(results)
