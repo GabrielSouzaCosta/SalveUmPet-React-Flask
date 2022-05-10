@@ -12,7 +12,7 @@ function App() {
     const [dogs, setDogs] = useState([])
 
     useEffect(() => {
-      fetch('/animals/cats', {
+      fetch('animals/cats', {
         'method': 'GET',
         headers: {
           'Content-type': 'application/json'
@@ -24,7 +24,7 @@ function App() {
     }, [])
 
     useEffect(() => {
-      fetch('/animals/dogs', {
+      fetch('animals/dogs', {
         'method': 'GET',
         headers: {
           'Content-type': 'application/json'

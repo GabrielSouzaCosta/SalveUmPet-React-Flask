@@ -5,9 +5,8 @@ export default function Login() {
   return (
         <>
             <Navbar/>
-
-                       
-            <div className="container-fluid vh-100 justify-content-center position-absolute top-0">
+     
+            <div style={{backgroundColor: "#ff4422aa"}} className="container-fluid vh-100 justify-content-center position-absolute top-0">
                 <div className="row d-flex justify-content-center align-items-center h-100">
                     <div className="col-12 col-sm-12 col-lg-3">
                         <div className="card">
