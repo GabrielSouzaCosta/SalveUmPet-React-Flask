@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { NavLink } from 'react-router-dom'
 import Navbar from '../Navbar'
 
 export default function Login() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [msg, setMsg] = useState("");
+
   return (
         <>
             <Navbar/>
@@ -23,15 +28,13 @@ export default function Login() {
                                             <label className='form-label' for="password">Senha</label>
                                             <input className='form-control' type="password" id='password' required placeholder='**************************' aria-describedby="passwordHelpBlock"></input>
                                         </div>
-                                    </div>
-                                    <div id="passwordHelpBlock" class="form-text mb-3">
-                                        Sua senha deve conter no mínimo 8 caracteres
+                                        {msg}
                                     </div>
 
 
                                     <p><a className="py-3 link-danger" href="">Esqueceu a senha?</a></p>
                                     <p><button className='btn btn-primary' type="submit">Entrar</button></p>
-                                    <p><a className="pt-3 link-primary mb-5" href="" >Ainda não possui uma conta?</a></p>
+                                    <p><NavLink className={"pt-3 link-primary mb-5"} to="/register">Ainda não possui uma conta?</NavLink></p>
                                 </div>
                         </div>
                   </div>

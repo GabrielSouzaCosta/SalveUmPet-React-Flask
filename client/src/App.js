@@ -5,6 +5,7 @@ import Home from './components/pages/Home';
 import CatsPage from './components/pages/CatsPage';
 import DogsPage from './components/pages/DogsPage';
 import Login from './components/pages/Login';
+import Register from './components/pages/Register';
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
           <Route path='/cats' element={<CatsPage cats={cats} />} />
           <Route path='/dogs' element={<DogsPage dogs={dogs} />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
         </Routes>
       </BrowserRouter>
      
