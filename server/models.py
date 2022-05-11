@@ -1,4 +1,5 @@
 from email.policy import default
+from hmac import compare_digest
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
@@ -20,15 +21,8 @@ class User(db.Model):
         self.email = email
         self.password = password
 
-    def get_id(self):
-        """Return the email address to satisfy Flask-Login's requirements."""
-        return self.id
-
-    def is_authenticated(self):
-        """Return True if the user is authenticated."""
-        return self.authenticated
-
-
+    def check_password(self, input_password):
+        return compare_digest(input_password, self.password)
 
 class Animal(db.Model):
     id = db.Column(db.Integer, primary_key=True)

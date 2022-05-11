@@ -1,8 +1,23 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from '../Navbar'
 import Footer from '../Footer'
+import { Link } from 'react-router-dom'
 
-export default function CatsPage(props) {
+export default function CatsPage() {
+  const [cats, setCats] = useState([])
+
+
+  useEffect(() => {
+    fetch('/api/animals/cats', {
+      'method': 'GET',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    }).then(res => res.json())
+    .then(res => setCats(res))
+    .catch(error => console.log(error))
+
+  }, [])
 
   return (
     <>
@@ -12,12 +27,12 @@ export default function CatsPage(props) {
     <div className="container-fluid vh-100">
         <h1 className='display-4 text-center mb-5 mt-3 fw-bolder'>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
           <div className='row'>
-                {props.cats.map(cat => {
+                {cats.map(cat => {
                   return (
                     <div key={cat.id} className='col-sm-2'>
                         <div className="card mb-2">
                           <div className='card-header text-center fs-4 fw-bold p-0'>{cat.name}</div>
-                          <a href=""><img className="card-img-top" src="assets/images/juquinha.jpeg" alt=""/></a>
+                          <Link to={`/cats/${cat.id}`} id={cat.id}><img style={{maxHeight: "300px"}} className="card-img-top" src="assets/images/juquinha.jpeg" alt=""/></Link>
                           <div className="card-body text-center fs-5 p-0">
                             <p className="card-text m-0">Distância: 0,1km</p>
                             <p className="card-text m-0">Idade: {cat.age}</p>

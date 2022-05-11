@@ -1,8 +1,20 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import Navbar from '../Navbar'
 import Footer from '../Footer'
 
-export default function DogsPage(props) {
+export default function DogsPage() {
+  const [dogs, setDogs] = useState([])
+
+  useEffect(() => {
+    fetch('/api/animals/dogs', {
+      'method': 'GET',
+      headers: {
+        'Content-type': 'application/json'
+      }
+    }).then(res => res.json())
+    .then(res => setDogs(res))
+    .catch(error => console.log(error))
+    }, [])
 
 
   return (
@@ -11,7 +23,7 @@ export default function DogsPage(props) {
       <div className="container-fluid">
           <h1 className='display-4 text-center mb-5 mt-3'>Cãezinhos para salvar próximo de você: Pouso Alegre</h1>
             <div className='row mx-2'>
-              {props.dogs.map(dog => {
+              {dogs.map(dog => {
                     return (
                         <div key={dog.id} className='col-sm-3'>
                           <div className="card mb-2">

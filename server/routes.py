@@ -1,21 +1,20 @@
 from flask import Flask, jsonify, redirect, request
 from app import app
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, current_user, get_jwt, set_access_cookies
-from models import *
+from models import Animal, animal_schema, animals_schema, db
 
-@app.route('/animals', methods = ['GET'])
+@app.route('/api/animals', methods = ['GET'])
 def get_posts():
     all_animals = Animal.query.all()
     results = animals_schema.dump(all_animals)
     return jsonify(results)
 
-@app.route('/animals/<id>/', methods = ['GET'])
-def post_details(id):
+@app.route('/api/animals/cats/<id>/', methods = ['GET'])
+def cat_details(id):
      animal = Animal.query.get(id)
      return animal_schema.jsonify(animal)
 
 
-@app.route('/add_post', methods = ['POST'])
+@app.route('/api/add_post', methods = ['POST'])
 def add_post():
      name = request.json['name']
      age = request.json['age']
@@ -27,7 +26,7 @@ def add_post():
 
      return animal_schema.jsonify(animal)
 
-@app.route('/update/<id>/', methods = ['PUT'])
+@app.route('/api/update/<id>/', methods = ['PUT'])
 def update_post(id):
      animal = Animal.query.get(id)
      update_name = request.json['name']
@@ -41,7 +40,7 @@ def update_post(id):
      db.session.commit()
      return animal_schema.jsonify(animal)
 
-@app.route('/delete/<id>/', methods = ['DELETE'])
+@app.route('/api/delete/<id>/', methods = ['DELETE'])
 def delete_post(id):
      animal = Animal.query.get(id)
      db.session.delete(animal)
@@ -49,14 +48,14 @@ def delete_post(id):
 
      return animal_schema.jsonify(animal)
 
-@app.route('/animals/cats', methods = ['GET'])
+@app.route('/api/animals/cats', methods = ['GET'])
 def get_cats():
      category = "cat"
      cats = Animal.query.filter_by(category=category)
      results = animals_schema.dump(cats)
      return jsonify(results)
 
-@app.route('/animals/dogs', methods = ['GET'])
+@app.route('/api/animals/dogs', methods = ['GET'])
 def get_dogs():
      dogs = Animal.query.filter(Animal.category == "dog")
      results = animals_schema.dump(dogs)

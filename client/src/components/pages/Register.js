@@ -1,11 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar';
-import { Link} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [msg, setMsg] = useState("");
+
+
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+        if(sessionStorage.getItem("token")) {
+            navigate('/')
+    }})
+
+    async function register() {
+      if (emailValidation() === false) {
+          console.log(email)
+          setMsg("Please, provide a valid email.")
+          return
+        } else if (password === "") {
+          setMsg("Please provide a password.")
+          return
+        }
+      await axios.post('/api/register', {"email":email, "password":password})
+      .then(res => {
+          if (res.status === 200) {
+          setMsg("LOADING...");
+          sessionStorage.setItem("token", res.data.access_token);
+          navigate('/')
+      }
+      })
+      .catch(err => {
+          if (err.response.status === 401) {
+            let msgErr = err.response.data.msg
+            setMsg(msgErr)
+            throw new Error(msgErr)
+        } else {
+          console.log(err)
+        }   
+      })}
+
+
+  function emailValidation() {
+      let regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      if(!email.match(regex)){
+          setMsg("Please provide a valid email");
+          return false;
+      }
+      return true;
+    }
+
+    
+
+
 
   return (
     <>
@@ -21,14 +71,14 @@ function Register() {
                   <input className="form-control form-control-sm my-2" type="email" required value={email} onChange={(e) => setEmail(e.target.value)}></input>
                   <label htmlFor="pwd" >Password:</label>
                   <input className="form-control form-control-sm my-2" type="password" id="pwd" required value={password} onChange={(e) => setPassword(e.target.value)} ></input>
-                  <div id="passwordHelpBlock" class="form-text mb-3">
+                  <div id="passwordHelpBlock" className="form-text mb-3">
                     Sua senha deve conter no mínimo 8 caracteres
                   </div>
-                  <button className="my-2 btn btn-danger" type="submit">Create account</button>
+                  <button className="my-2 btn btn-danger" type="submit" onClick={register}>Create account</button>
                 </div>
               </form>
               
-              <p className="mt-2">Already have an account? <Link to="/login">Login now!</Link></p>
+              <Link to="/login">Já possui uma conta?</Link>
               <div id="passwordHelpBlock" className="form-text mb-3 ">
                       {msg}
               </div>
