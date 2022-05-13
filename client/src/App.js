@@ -8,6 +8,7 @@ import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import CatPost from './components/pages/CatPost';
 import NewPost from './components/pages/NewPost';
+import Perfil from './components/pages/Perfil';
 
 function App() {
 
@@ -16,10 +17,11 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element={<Home />} />
-          <Route path='/cats' element={<CatsPage />} />
+          <Route path='/gatos' element={<CatsPage />} />
           <Route path='/dogs' element={<DogsPage />} />
-          <Route path='/cats/:id' element={<CatPost />} />
+          <Route path='/gatos/:id' element={<CatPost />} />
           <Route path='/new_post' element={<NewPost />} />
+          <Route path='/perfil' element={<Perfil />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
         </Routes>

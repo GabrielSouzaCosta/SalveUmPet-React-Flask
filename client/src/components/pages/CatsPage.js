@@ -32,11 +32,11 @@ export default function CatsPage() {
                     <div key={cat.id} className='col-sm-2'>
                         <div className="card mb-2">
                           <div className='card-header text-center fs-4 fw-bold p-0'>{cat.name}</div>
-                          <Link to={`/cats/${cat.id}`} id={cat.id}><img style={{maxHeight: "300px"}} className="card-img-top" src="assets/images/juquinha.jpeg" alt=""/></Link>
+                          <Link to={`/gatos/${cat.id}`} id={cat.id}><img style={{maxHeight: "300px"}} className="card-img-top" src="assets/images/juquinha.jpeg" alt=""/></Link>
                           <div className="card-body text-center fs-5 p-0">
                             <p className="card-text m-0">Distância: 0,1km</p>
-                            <p className="card-text m-0">Idade: {cat.age}</p>
-                            <p className="card-text fs-5">{cat.animalDetails}</p>
+                            <p className="card-text m-0">Idade: {(cat.years === 1) ? `${cat.years} ano`:""} {(cat.years > 1) ? `${cat.years} anos`: ""} {(cat.years && cat.months) ? " e ": ""} {(cat.months === 1) ? `${cat.months} mês` : ""}  {(cat.months > 1) ? `${cat.months} meses` : ""}</p>
+                            <p className="card-text fs-5">{cat.details}</p>
                           </div>
                           <div className="card-footer text-muted">
                             {cat.publishedDate}

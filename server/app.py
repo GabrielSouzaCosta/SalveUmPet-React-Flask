@@ -9,7 +9,6 @@ app.config.from_object('config')
 
 from models import db
 from routes import app
-from auth_routes import app
 
 
 CORS(app)

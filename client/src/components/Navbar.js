@@ -25,15 +25,16 @@ function Navbar () {
                     <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <ul className="navbar-nav me-sm-auto">
                             <li className="nav-item">
-                                <NavLink to="/cats" className={"nav-link link-danger fw-bold fs-5"}><img height={"30px"} src="/assets/images/cat.png" alt="" />Salve um Gato</NavLink>
+                                <NavLink to="/gatos" className={"nav-link link-dark fw-bold fs-5"}><img height={"30px"} src="/assets/images/cat.png" alt="" />Salve um Gato</NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/dogs" className={"nav-link link-danger fw-bold fs-5"} >Salve um Dog <img height={"30px"} src="/assets/images/dog.png" alt="" /></NavLink>
+                                <NavLink to="/dogs" className={"nav-link link-dark fw-bold fs-5"} >Salve um Dog <img height={"30px"} src="/assets/images/dog.png" alt="" /></NavLink>
                             </li>
                         </ul>
                         <div className="d-flex">
                             <ul className="navbar-nav">
-                                { (SessionToken) ? <> 
+                                { (SessionToken) ? <>
+                                <NavLink to="/perfil" className={"nav-link link-dark fs-5"}>Meu Perfil</NavLink>
                                 <NavLink to="/new_post" className={"nav-link link-dark fs-5"} >Doar um pet</NavLink>
                                 <li className="nav-item"><a className="nav-link link-dark fs-5" href="/" onClick={(e) => logout(e)}>Logout</a></li> 
                                 </>
