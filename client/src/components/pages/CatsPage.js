@@ -21,11 +21,11 @@ export default function CatsPage() {
 
   return (
     <>
+    <Navbar />
     <div style={{backgroundColor: "#904e55"}} className="h-100">
       
-    <Navbar />
-    <div className="container-fluid vh-100">
-        <h1 className='display-4 text-center mb-5 mt-3 fw-bolder'>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
+    <div className="container-fluid h-100">
+        <h1 className='display-4 text-center mb-5 pt-2 fw-bolder'>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
           <div className='row'>
                 {cats.map(cat => {
                   return (
@@ -50,8 +50,8 @@ export default function CatsPage() {
                 
           </div>
     </div>
-
     <Footer />
+
 
     </div>
     </>

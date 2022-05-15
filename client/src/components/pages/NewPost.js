@@ -37,12 +37,22 @@ function NewPost() {
   return (<>
       <Navbar />
       <div style={{backgroundColor: "#110011ee"}} className='vh-100'>
-        <div style={{backgroundColor: "#904e55ee"}} className='container-sm text-white'>
+        <div style={{backgroundColor: "#904e55ee"}} className='container-sm text-white h-100'>
+            <h1 className='display-6 pb-3 fw-bolder text-center pt-5'>Doar um Pet</h1>
+
+            <div className='d-flex flex-column'>
+            <form encType="multipart/form-data" onSubmit={(e) => handleUpload(e)}>
+                <div className="d-flex flex-column justify-content-center align-items-center mt-1">
+                    <p className='p mb-1'>Imagens do seu pet:</p>
+                    <label className='btn btn-success' htmlFor="petImages">Fotinhas &#128525;</label>
+                    <input type="file" id="petImages" className='d-none' accept="image/*" multiple max={4} onChange={(e) => { setFiles(e.target.files); console.log(e.target.files) } }/>
+                    <button type="submit" className="btn btn-warning my-2">Enviar fotos</button>
+                </div>
+            </form> 
 
             <form onSubmit={(e) => handleNewPost(e)}>
-            <div className='d-flex flex-column align-items-center justify-content-center vh-100'>
+            <div className='d-flex flex-column align-items-center justify-content-center h-100'>
 
-            <h1 className='display-6 pb-3 fw-bolder'>Doar um Pet</h1>
 
             <label className='my-3' htmlFor='name'>Nome do bichinho:</label>
             <input className='form-control w-25 mb-3' value={name} onChange={(e)=> setName(e.target.value)} id='name' required></input>
@@ -73,14 +83,6 @@ function NewPost() {
                 Carinhoso: <Rating required ratingValue={kindRating} allowHalfIcon={true} onClick={ (e) => setKindRating(e) } emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
             </div>
 
-            <form encType="multipart/form-data" onSubmit={(e) => handleUpload(e)}>
-                <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                    <p className='p mb-1'>Imagens do seu pet:</p>
-                    <label className='btn btn-success' htmlFor="petImages">Fotinhas &#128525;</label>
-                    <input type="file" className="d-none" id="petImages" accept="image/*" multiple max={4} onChange={(e) => { setFiles(e.target.files); console.log(e.target.files) } }/>
-                    <button type="submit" className="btn btn-warning my-2">Enviar fotos</button>
-                </div>
-            </form>
             <div>
             <input type="checkbox" className='form-check-input me-1' required id="acceptAdoption" name="accept" value="accept_adoption" />
             <label htmlFor="acceptAdoption" className="form-check-label">Eu aceito realizar uma doação responsável</label>
@@ -92,7 +94,10 @@ function NewPost() {
 
             
             </div>
+
             </form>
+
+            </div>
 
         </div>
     </div>

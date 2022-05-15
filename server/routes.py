@@ -115,6 +115,11 @@ def upload_image():
         'file': 'Received'
     })
 
+@app.route('/api/images', methods = ['GET'])
+def images():
+    images = Upload.query.all()
+    
+
 @app.route('/api/update/<id>/', methods = ['PUT'])
 def update_post(id):
      animal = Animal.query.get(id)
