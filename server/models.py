@@ -13,13 +13,14 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
+    name = db.Column(db.String(80))
     password = db.Column(db.String)
-    authenticated = db.Column(db.Boolean, default=False)
     createdAt = db.Column(db.DateTime, default=datetime.now)
     animals = db.relationship('Animal', backref='user', lazy=True)
 
-    def __init__(self, email, password):
+    def __init__(self, email, name, password):
         self.email = email
+        self.name = name
         self.password = password
 
     def check_password(self, input_password):
@@ -35,7 +36,7 @@ class Animal(db.Model):
     cute_rating = db.Column(db.Integer, default=100)
     playful_rating = db.Column(db.Integer, default=100)
     kind_rating = db.Column(db.Integer, default=100)
-    publishedDate = db.Column(db.DateTime, default=datetime.now)
+    published_date = db.Column(db.DateTime, default=datetime.now)
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))
     files = db.relationship('Upload', cascade='all, delete', backref="animal", lazy=True)
 
@@ -59,16 +60,33 @@ class Animal(db.Model):
 
 class Upload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    filename = db.Column(db.String(50))
-    data = db.Column(db.LargeBinary)
+    url = db.Column(db.String)
     owner = db.Column(db.Integer, db.ForeignKey("animal.id"))
 
+    def __init__(self, url, owner):
+        self.url = url
+        self.owner = owner
+
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = ('name', 'email')
 
 class AnimalSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'category', 'years', 'months', 'details', 'cute_rating', 'playful_rating', 'kind_rating', 'publishedDate')
+        fields = ('id', 'name', 'category', 'years', 'months', 'details', 'cute_rating', 'playful_rating', 'kind_rating', 'published_date')
+
+class UploadSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'url', 'owner')
 
 animal_schema = AnimalSchema()
 animals_schema = AnimalSchema(many=True)
+
+upload_schema = UploadSchema()
+uploads_schema = UploadSchema(many=True)
+
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
+
 
 

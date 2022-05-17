@@ -15,38 +15,52 @@ function NewPost() {
     const [cuteRating, setCuteRating] = useState(90);
     const [playfulRating, setPlayfulRating] = useState(85);
     const [kindRating, setKindRating] = useState(100);
-    const [files, setFiles] = useState(null);
+    const [files, setFiles] = useState([]);
 
     const navigate = useNavigate();
 
-    async function handleUpload(e) {
-        e.preventDefault();
+    async function handleUpload(id) {
         var formData = new FormData();
         var imagefile = document.querySelector('#petImages');
-        console.log(imagefile);
-        formData.append("file", imagefile.files[0]);
-        const response = await axios.post('/api/upload_image', formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } )
+        files.forEach((file) => {
+            console.log(file)
+            formData.append("file", file);
+        })
+        const response = await axios.post(`/api/upload_image/${id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } )
     }
 
     async function handleNewPost(e) {
         e.preventDefault()
         await axios.post('/api/add_post', {"name": name, "category": category, "years": age.years, "months": age.months, "details": animalDetails, "cute_rating": cuteRating, "playful_rating": playfulRating, "kind_rating": kindRating})
-        navigate(`/perfil`)
+        .then(res => handleUpload(res.data.id))
+        navigate(`/gatos`)
     }   
+
+    function handleUploadChange(e) {
+      const targetFiles = e.target.files;
+      const targetFilesObject= [...targetFiles]
+      setFiles(targetFilesObject);
+    }
 
   return (<>
       <Navbar />
       <div style={{backgroundColor: "#110011ee"}} className='vh-100'>
         <div style={{backgroundColor: "#904e55ee"}} className='container-sm text-white h-100'>
-            <h1 className='display-6 pb-3 fw-bolder text-center pt-5'>Doar um Pet</h1>
+            <h1 className='display-6 pb-3 fw-bolder text-center pt-3'>Doar um Pet</h1>
 
             <div className='d-flex flex-column'>
-            <form encType="multipart/form-data" onSubmit={(e) => handleUpload(e)}>
+            <form encType="multipart/form-data" onSubmit={(e) => e.preventDefault() }>
                 <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                    <p className='p mb-1'>Imagens do seu pet:</p>
                     <label className='btn btn-success' htmlFor="petImages">Fotinhas &#128525;</label>
-                    <input type="file" id="petImages" className='d-none' accept="image/*" multiple max={4} onChange={(e) => { setFiles(e.target.files); console.log(e.target.files) } }/>
-                    <button type="submit" className="btn btn-warning my-2">Enviar fotos</button>
+                    <input type="file" id="petImages" className='d-none' accept="image/*" multiple onChange={handleUploadChange}/>
+                    <div className='d-flex justify-content-center align-items-center pt-2'>
+                    {files.map((file, i)=>{
+                        return (
+                            <img className='img-fluid w-25' key={`image-${i}`} src={URL.createObjectURL(file)} />
+                        )   
+                    })}
+                    </div>
+
                 </div>
             </form> 
 
@@ -69,7 +83,7 @@ function NewPost() {
                 <label htmlFor='yearsOld' className='me-1'>Anos:</label>
                 <input className='form-control w-50 me-1' value={age.years} onChange={(e)=> setAge({...age, years: e.target.value}) } id='yearsOld' type="number" />
                 <label htmlFor='monthsOld' className='me-1'>Meses:</label>
-                <input className='form-control w-50' value={age.months} onChange={(e)=> setAge({...age, months: e.target.value}) } id='monthsOld' type="number" />
+                <input className='form-control w-50' value={age.months} onChange={(e)=> setAge({...age, months: e.target.value}) } max="11" id='monthsOld' type="number" />
             </div>
             <label className='my-2' htmlFor='details'>Como seu bichinho é?</label>
             <textarea id='details' required value={animalDetails} onChange={ (e) => setAnimalDetails(e.target.value) } className="form-control w-25 mb-2" rows="3" cols="40"/>
@@ -92,7 +106,6 @@ function NewPost() {
 
             <input type="submit" className='btn btn-warning text-success mt-3' value="Doar meu pet"></input>
 
-            
             </div>
 
             </form>

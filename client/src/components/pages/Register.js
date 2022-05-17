@@ -6,6 +6,7 @@ import axios from 'axios';
 function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [name, setName] = useState("");
     const [msg, setMsg] = useState("");
 
 
@@ -25,7 +26,7 @@ function Register() {
           setMsg("Please provide a password.")
           return
         }
-      await axios.post('/api/register', {"email":email, "password":password})
+      await axios.post('/api/register', {"email":email, "password":password, "name": name})
       .then(res => {
           if (res.status === 200) {
           setMsg("LOADING...");
@@ -68,13 +69,15 @@ function Register() {
               <form className='form' onSubmit={(e) => e.preventDefault()}>
                 <div className='d-flex flex-column justify-content-center text-center w-100 px-1'>
                   <label htmlFor="email">Email:</label>
-                  <input className="form-control form-control-sm my-2" type="email" required value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                  <label htmlFor="pwd" >Password:</label>
+                  <input className="form-control form-control-sm my-2" type="email" id='email' required value={email} onChange={(e) => setEmail(e.target.value)}></input>
+                  <label htmlFor="name">Nome Completo:</label>
+                  <input className="form-control form-control-sm my-2" type="text" id='name' required value={name} onChange={(e) => setName(e.target.value)}></input>
+                  <label htmlFor="pwd" >Senha:</label>
                   <input className="form-control form-control-sm my-2" type="password" id="pwd" required value={password} onChange={(e) => setPassword(e.target.value)} ></input>
                   <div id="passwordHelpBlock" className="form-text mb-3">
                     Sua senha deve conter no mínimo 8 caracteres
                   </div>
-                  <button className="my-2 btn btn-danger" type="submit" onClick={register}>Create account</button>
+                  <button className="my-2 btn btn-danger" type="submit" onClick={register}>Criar Conta</button>
                 </div>
               </form>
               

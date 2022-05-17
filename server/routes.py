@@ -1,7 +1,7 @@
 from datetime import datetime, timezone, timedelta
-from fileinput import filename
+from werkzeug.utils import secure_filename
 from flask import Flask, jsonify, redirect, request
-from app import app
+from app import app, s3, upload_file_to_s3
 from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, current_user, set_access_cookies, get_jwt
 from models import *
 
@@ -36,6 +36,7 @@ def refresh_expiring_jwts(response):
 def register():
     email = request.json.get('email')
     password = request.json.get('password')
+    name = request.json.get('name')
     user_exists = User.query.filter_by(email=email).one_or_none()
     if user_exists:
         msg = "O usuário já existe."
@@ -45,7 +46,7 @@ def register():
         msg = "A senha deve conter pelo menos 8 caracteres."
         return {"msg": msg}, 401
 
-    user = User(email, password)
+    user = User(email, name, password)
     db.session.add(user)
     db.session.commit()
     access_token = create_access_token(identity=email)
@@ -67,24 +68,8 @@ def login():
 @app.route('/api/profile', methods=['GET'])
 @jwt_required()
 def profile():
-    user = User.query.filter_by(email=get_jwt_identity()).one_or_none()
-    donations = Animal.query.filter_by(owner=user.id)
-    interests = user.interested_at
-    print(user, donations, interests)
-    return jsonify(user, donations)
-
-
-@app.route('/api/animals', methods = ['GET'])
-def get_posts():
-    all_animals = Animal.query.all()
-    results = animals_schema.dump(all_animals)
-    return jsonify(results)
-
-@app.route('/api/animals/cats/<id>/', methods = ['GET'])
-def cat_details(id):
-     animal = Animal.query.get(id)
-     return animal_schema.jsonify(animal)
-
+    user = user_schema.dump(User.query.filter_by(email=get_jwt_identity()).one_or_none())
+    return jsonify(user)
 
 @app.route('/api/add_post', methods = ['POST'])
 def add_post():
@@ -101,24 +86,62 @@ def add_post():
 
      return animal_schema.jsonify(animal)
 
-@app.route('/api/upload_image', methods = ['POST'])
+@app.route('/api/animals', methods = ['GET'])
+def get_posts():
+    all_animals = Animal.query.all()
+    results = animals_schema.dump(all_animals)
+    return jsonify(results)
+
+@app.route('/api/animals/cats', methods = ['GET'])
+def get_cats():
+     category = "gato"
+     cats = Animal.query.filter_by(category=category)
+     results = animals_schema.dump(cats)
+     for cat in results:
+        cat['image'] = "/assets/images/ramenCat.png"
+        img = upload_schema.dump(Upload.query.filter_by(owner=cat['id']).first())
+        if img:
+            cat['image'] = img['url']
+     return jsonify(results)
+
+@app.route('/api/animals/cats/<id>/', methods = ['GET'])
+def cat_details(id):
+     animal = animal_schema.dump(Animal.query.get(id))
+     images = uploads_schema.dump(Upload.query.filter_by(owner=id))
+     animal['images'] = images
+
+     return animal
+
+@app.route('/api/animals/dogs', methods = ['GET'])
+def get_dogs():
+     dogs = Animal.query.filter(Animal.category == "dog")
+     results = animals_schema.dump(dogs)
+     return jsonify(results)
+
+@app.route('/api/upload_image/<id>', methods = ['POST'])
 @jwt_required()
-def upload_image():
-     files = request.files['file']
-     user = User.query.filter_by(email=get_jwt_identity()).one_or_none()
-     upload = Upload(filename=files.filename ,data=files.read(), owner=user.id)
-     db.session.add(upload)
-     db.session.commit()   
+def upload_image(id):
+    files = request.files.getlist("file")
+    print(files, len(files))
+    if files:
+        if len(files) == 1:
+            files.filename = secure_filename(files.filename)
+            output = upload_file_to_s3(files, app.config["S3_BUCKET"])
+            upload = Upload(url=output, owner=id)
+            db.session.add(upload)
+            db.session.commit()
+        else:
+            for f in files:
+                f.filename = secure_filename(f.filename)
+                output = upload_file_to_s3(f, app.config["S3_BUCKET"])
+                upload = Upload(url=output, owner=id)
+                db.session.add(upload)
+                db.session.commit()
 
-     return jsonify({
-        'success': True,
-        'file': 'Received'
-    })
-
-@app.route('/api/images', methods = ['GET'])
-def images():
-    images = Upload.query.all()
+        return str(output)
     
+    else:
+        return "Escolha uma foto"
 
 @app.route('/api/update/<id>/', methods = ['PUT'])
 def update_post(id):
@@ -141,16 +164,3 @@ def delete_post(id):
      db.session.commit()
 
      return animal_schema.jsonify(animal)
-
-@app.route('/api/animals/cats', methods = ['GET'])
-def get_cats():
-     category = "gato"
-     cats = Animal.query.filter_by(category=category)
-     results = animals_schema.dump(cats)
-     return jsonify(results)
-
-@app.route('/api/animals/dogs', methods = ['GET'])
-def get_dogs():
-     dogs = Animal.query.filter(Animal.category == "dog")
-     results = animals_schema.dump(dogs)
-     return jsonify(results)
