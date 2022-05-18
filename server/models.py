@@ -1,4 +1,3 @@
-from email.policy import default
 from hmac import compare_digest
 from app import app
 from flask_sqlalchemy import SQLAlchemy
@@ -8,6 +7,7 @@ from flask_marshmallow import Marshmallow
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
+# Database Models
 class User(db.Model):
     __tablename__ = 'user'
 
@@ -41,7 +41,7 @@ class Animal(db.Model):
     owner = db.Column(db.Integer, db.ForeignKey('user.id'))
     files = db.relationship('Upload', cascade='all, delete', backref="animal", lazy=True)
 
-    def __init__(self, name, category, years, months, details, cute_rating, playful_rating, kind_rating):
+    def __init__(self, name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner):
         self.name = name
         self.category = category
         self.years = years
@@ -50,6 +50,7 @@ class Animal(db.Model):
         self.cute_rating = cute_rating
         self.playful_rating = playful_rating
         self.kind_rating = kind_rating
+        self.owner = owner
 
 
     def add(self):
@@ -68,6 +69,11 @@ class Upload(db.Model):
         self.url = url
         self.owner = owner
 
+# Schemas
+class AnimalSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'category', 'years', 'months', 'details', 'cute_rating', 'playful_rating', 'kind_rating', 'published_date', 'owner')
+
 class ProfilePhoto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String)
@@ -77,13 +83,15 @@ class ProfilePhoto(db.Model):
         self.url = url
         self.owner = owner
 
-class UserSchema(ma.Schema):
+class UserSchema(ma.SQLAlchemySchema):
     class Meta:
-        fields = ('id', 'name', 'email')
+        model = User
+    
+    id = ma.auto_field()
+    email = ma.auto_field()
+    name = ma.auto_field()
+    animals = ma.Nested(AnimalSchema, many=True)
 
-class AnimalSchema(ma.Schema):
-    class Meta:
-        fields = ('id', 'name', 'category', 'years', 'months', 'details', 'cute_rating', 'playful_rating', 'kind_rating', 'published_date')
 
 class UploadSchema(ma.Schema):
     class Meta:

@@ -23,6 +23,7 @@ export default function Perfil() {
 
 
 
+
   return (
     <div className='vh-100'>
         <Navbar />
@@ -42,6 +43,26 @@ export default function Perfil() {
             <h2 className='' id='email'>{user.email}</h2>
           </div>
           <h3 className=''>Meus pets para adoção</h3>
+          {(user.animals) ? user.animals.map((animal) => {
+            return (<>
+            <div key={animal.id} className='col-md-6 col-lg-3 mb-4 mb-lg-0'>
+                        <div className="card mb-2">
+                          <div className='card-header text-center fs-4 fw-bold p-0'>{animal.name}</div>
+                          <div className="card-body text-center fs-5 p-0">
+
+                            {(animal.image)? <img style={{height: "220px"}} className="card-img-top" src={animal.image} alt="animal"/> :
+                                             <img style={{height: "350px"}} className="card-img-top" src="assets/images/nophoto.png" alt="animal"/>}
+
+                            <div className='card-footer'>
+                              <p className="card-text m-0">Idade: {(animal.years === 1) ? `${animal.years} ano`:""} {(animal.years > 1) ? `${animal.years} anos`: ""} {(animal.years && animal.months) ? " e ": ""} {(animal.months === 1) ? `${animal.months} mês` : ""}  {(animal.months > 1) ? `${animal.months} meses` : ""}</p>
+                              <p className="card-text fs-5">{animal.details}</p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+            
+            </>)
+          }) : ""}
           <h3>Meus Interesses</h3>
 
         </div>
@@ -55,9 +76,9 @@ export default function Perfil() {
             <div className="modal-body">
               <div className='d-flex flex-column justify-content-center align-items-center'>
                 {(user.photo && !photo) ?
-                  <img src={user.photo} className='border mb-2'  width={"300px"} alt="photo" /> : `${user.photo}`
+                  <img src={user.photo} className='border mb-2'  width={"300px"} alt="profile" /> : `${user.photo}`
                 }
-                {(photo) ? <img src={URL.createObjectURL(photo)} className='border mb-2'  width={"300px"} alt="photo" /> 
+                {(photo) ? <img src={URL.createObjectURL(photo)} className='border mb-2'  width={"300px"} alt="profile" /> 
                   : `${user.photo}`
                 }
                 {(!photo && !user.photo) ? <img src="/assets/images/blank_profile.png" className='border mb-2' height={"300px"} alt="profile" />: "3"}

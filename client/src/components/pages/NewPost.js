@@ -21,19 +21,27 @@ function NewPost() {
 
     async function handleUpload(id) {
         var formData = new FormData();
-        var imagefile = document.querySelector('#petImages');
-        files.forEach((file) => {
-            console.log(file)
-            formData.append("file", file);
-        })
-        const response = await axios.post(`/api/upload_image/${id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } )
+        if (files) {
+            files.forEach((file) => {
+                console.log(file)
+                formData.append("file", file);
+            })
+        }
+        console.log(formData)
+        await axios.post(`/api/upload_image/${id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } ).then()
+        navigate(`/gatos`)
     }
 
     async function handleNewPost(e) {
         e.preventDefault()
-        await axios.post('/api/add_post', {"name": name, "category": category, "years": age.years, "months": age.months, "details": animalDetails, "cute_rating": cuteRating, "playful_rating": playfulRating, "kind_rating": kindRating})
+        await axios.post('/api/add_post', {"name": name, "category": category, "years": age.years, "months": age.months, "details": animalDetails, "cute_rating": cuteRating, "playful_rating": playfulRating, "kind_rating": kindRating}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } })
         .then(res => handleUpload(res.data.id))
-        navigate(`/gatos`)
+        .catch(err => {if (err.response.data.msg === "Missing Authorization Header") {
+            console.log(err.response.data.msg);
+            sessionStorage.removeItem("token");
+            navigate("/login");
+            window.alert('Sessão expirada, por favor fazer login novamente');
+        } })
     }   
 
     function handleUploadChange(e) {
@@ -56,7 +64,7 @@ function NewPost() {
                     <div className='d-flex justify-content-center align-items-center pt-2'>
                     {files.map((file, i)=>{
                         return (
-                            <img className='img-fluid w-25' key={`image-${i}`} src={URL.createObjectURL(file)} />
+                            <img className='img-fluid w-25' key={`image-${i}`} alt="pet" src={URL.createObjectURL(file)} />
                         )   
                     })}
                     </div>

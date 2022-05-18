@@ -1,4 +1,5 @@
 from datetime import datetime, timezone, timedelta
+import email
 from werkzeug.utils import secure_filename
 from flask import Flask, jsonify, redirect, request
 from app import app, s3, upload_file_to_s3
@@ -69,12 +70,14 @@ def login():
 @jwt_required()
 def profile():
     user = user_schema.dump(User.query.filter_by(email=get_jwt_identity()).one_or_none())
+    print(user)
     image = upload_schema.dump(ProfilePhoto.query.filter_by(owner=user['id']).first())
     if image:
         user['photo'] = image['url']
     return jsonify(user)
 
 @app.route('/api/add_post', methods = ['POST'])
+@jwt_required()
 def add_post():
      name = request.json['name']
      category = request.json['category']
@@ -84,7 +87,9 @@ def add_post():
      cute_rating = request.json['cute_rating']
      playful_rating = request.json['playful_rating']
      kind_rating = request.json['kind_rating']
-     animal = Animal(name, category, years, months, details, cute_rating, playful_rating, kind_rating)
+     owner = User.query.filter_by(email=get_jwt_identity()).one_or_none()
+     print(owner)
+     animal = Animal(name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner=owner.id)
      animal.add()
 
      return animal_schema.jsonify(animal)
@@ -101,7 +106,7 @@ def get_cats():
      cats = Animal.query.filter_by(category=category)
      results = animals_schema.dump(cats)
      for cat in results:
-        cat['image'] = "/assets/images/ramenCat.png"
+        cat['image'] = "/assets/images/nophoto.png"
         img = upload_schema.dump(Upload.query.filter_by(owner=cat['id']).first())
         if img:
             cat['image'] = img['url']
@@ -124,40 +129,51 @@ def get_dogs():
 @app.route('/api/upload_image/<id>', methods = ['POST'])
 @jwt_required()
 def upload_image(id):
-    files = request.files.getlist("file")
-    prof_photo = request.files['profile_photo']
-    if files:
-        if len(files) == 1:
-            files[0].filename = secure_filename(files[0].filename)
-            output = upload_file_to_s3(files[0], app.config["S3_BUCKET"])
-            upload = Upload(url=output, owner=id)
-            db.session.add(upload)
-            db.session.commit()
-        else:
-            for f in files:
-                f.filename = secure_filename(f.filename)
-                output = upload_file_to_s3(f, app.config["S3_BUCKET"])
+    try:
+        files = request.files.getlist("file")
+
+    except Exception as e:
+        return "sem imagens"
+
+    else: 
+        if files:
+            if len(files) == 1:
+                files[0].filename = secure_filename(files[0].filename)
+                output = upload_file_to_s3(files[0], app.config["S3_BUCKET"])
                 upload = Upload(url=output, owner=id)
                 db.session.add(upload)
                 db.session.commit()
-        return str(output)
+            else:
+                for f in files:
+                    f.filename = secure_filename(f.filename)
+                    output = upload_file_to_s3(f, app.config["S3_BUCKET"])
+                    upload = Upload(url=output, owner=id)
+                    db.session.add(upload)
+                    db.session.commit()
+            return str(output)
 
-    elif prof_photo:
-        prof_photo.filename = secure_filename(prof_photo.filename)
-        output = upload_file_to_s3(prof_photo, app.config["S3_BUCKET"])
-        users_images = ProfilePhoto.query.filter_by(owner=id)
-        if users_images:
-            for img in users_images:
-                db.session.delete(img)
-            db.session.commit()
-        upload = ProfilePhoto(url=output, owner=id)
-        db.session.add(upload)
-        db.session.commit()
-        images = uploads_schema.dump(ProfilePhoto.query.filter_by(owner=id))
-        return str(output)
+    try:
+        prof_photo = request.files['profile_photo']
+
+    except Exception as e:
+            return "sem imagens"
 
     else:
-        return "Escolha uma foto"
+        if prof_photo:
+            prof_photo.filename = secure_filename(prof_photo.filename)
+            output = upload_file_to_s3(prof_photo, app.config["S3_BUCKET"])
+            users_images = ProfilePhoto.query.filter_by(owner=id)
+            if users_images:
+                for img in users_images:
+                    db.session.delete(img)
+                db.session.commit()
+            upload = ProfilePhoto(url=output, owner=id)
+            db.session.add(upload)
+            db.session.commit()
+            images = uploads_schema.dump(ProfilePhoto.query.filter_by(owner=id))
+            return str(output)
+
+        
 
 @app.route('/api/update/<id>/', methods = ['PUT'])
 def update_post(id):
