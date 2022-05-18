@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Navbar from '../Navbar';
 
 export default function Perfil() {
@@ -22,13 +23,13 @@ export default function Perfil() {
     }
 
 
-
-
+    
+    
   return (
     <div className='vh-100'>
         <Navbar />
 
-        <div className='d-flex flex-column h-100 align-items-center pt-4'>
+        <div className='d-flex flex-column align-items-center pt-4'>
         {(user.photo) ?
                   <input type="image" src={user.photo} className='border mb-2'  height={"300px"} alt="profile" data-bs-toggle="modal" data-bs-target="#photoModal" /> :
                   <input type="image" src="/assets/images/blank_profile.png" className='border mb-2' height={"300px"} alt="profile" data-bs-toggle="modal" data-bs-target="#photoModal" ></input>
@@ -42,30 +43,39 @@ export default function Perfil() {
             <label className='h2' htmlFor='email'>Email: </label>
             <h2 className='' id='email'>{user.email}</h2>
           </div>
-          <h3 className=''>Meus pets para adoção</h3>
-          {(user.animals) ? user.animals.map((animal) => {
-            return (<>
-            <div key={animal.id} className='col-md-6 col-lg-3 mb-4 mb-lg-0'>
+        </div>
+          
+          <div className='d-flex justify-content-around align-items-center'>
+              <div className='w-50'>
+                <span className='card btn bg-warning h-100 mb-3 fs-5 fw-bold text-center text-uppercase py-1 mx-2'>Meus pets para adoção</span>
+
+                <div className='row w-100'>
+                {(user.animals) ? user.animals.map((animal) => {
+                  return (
+                      <div key={animal.id} className='col-md-6 col-lg-3 mb-4 mb-lg-0'>
                         <div className="card mb-2">
                           <div className='card-header text-center fs-4 fw-bold p-0'>{animal.name}</div>
                           <div className="card-body text-center fs-5 p-0">
-
-                            {(animal.image)? <img style={{height: "220px"}} className="card-img-top" src={animal.image} alt="animal"/> :
-                                             <img style={{height: "350px"}} className="card-img-top" src="assets/images/nophoto.png" alt="animal"/>}
-
-                            <div className='card-footer'>
+                            <Link to={`/${animal.category}s/${animal.id}`} key={`link-${animal.id}`}>
+                              {(animal.image)? <img key={`image-${animal.id}`} style={{height: "320px"}} className="card-img-top" src={animal.image} alt="animal"/> :
+                                              <img key={`image-${animal.id}`}  style={{height: "320px"}} className="card-img-top" src="assets/images/nophoto.png" alt="animal"/>}
+                            </Link>
+                            <div className='card-footer' key={`description-${animal.id}`} >
                               <p className="card-text m-0">Idade: {(animal.years === 1) ? `${animal.years} ano`:""} {(animal.years > 1) ? `${animal.years} anos`: ""} {(animal.years && animal.months) ? " e ": ""} {(animal.months === 1) ? `${animal.months} mês` : ""}  {(animal.months > 1) ? `${animal.months} meses` : ""}</p>
                               <p className="card-text fs-5">{animal.details}</p>
                             </div>
                           </div>
                         </div>
-                    </div>
-            
-            </>)
-          }) : ""}
-          <h3>Meus Interesses</h3>
+                      </div>
+                  )
+                }) : ""}
+                </div>
+              
+              </div>
 
-        </div>
+              <span className='w-50 card  btn bg-success h-100 mb-3 fs-5 fw-bold text-uppercase py-1 mx-2'>Pets que quero adotar</span>
+
+          </div>
 
         <div className="modal fade" id="photoModal" tabIndex="-1" aria-labelledby="photoModalLabel" aria-hidden="true">
             <div className="modal-dialog">

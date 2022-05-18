@@ -19,7 +19,6 @@ export default function CatsPage() {
     .catch(error => console.log(error))
     
   }, [])
-  
 
   return (
     <>
@@ -28,6 +27,7 @@ export default function CatsPage() {
       
     <div className="container-fluid h-100">
         <h1 className='display-4 text-center mb-5 pt-2 fw-bolder'>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
+        {(cats ==! null) ? 
           <div className='row'>
                 {cats.map(cat => {  
                   var date = ""
@@ -54,11 +54,14 @@ export default function CatsPage() {
                         </div>
                     </div>
                   )
-                })}
-
+                })} 
+              </div> : <div className='vh-100'>
+                          <h1 className='text-center mt-2'>Sem gatos para doação no momento!</h1>
+                      </div>   
+        }
+                
 
                 
-          </div>
     </div>
 
 

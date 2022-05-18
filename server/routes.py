@@ -70,7 +70,6 @@ def login():
 @jwt_required()
 def profile():
     user = user_schema.dump(User.query.filter_by(email=get_jwt_identity()).one_or_none())
-    print(user)
     image = upload_schema.dump(ProfilePhoto.query.filter_by(owner=user['id']).first())
     if image:
         user['photo'] = image['url']
@@ -88,7 +87,6 @@ def add_post():
      playful_rating = request.json['playful_rating']
      kind_rating = request.json['kind_rating']
      owner = User.query.filter_by(email=get_jwt_identity()).one_or_none()
-     print(owner)
      animal = Animal(name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner=owner.id)
      animal.add()
 
