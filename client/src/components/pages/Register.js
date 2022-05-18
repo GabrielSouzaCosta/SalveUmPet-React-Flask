@@ -14,7 +14,7 @@ function Register() {
 
     useEffect(()=>{
         if(sessionStorage.getItem("token")) {
-            navigate('/')
+            navigate('/perfil')
     }})
 
     async function register() {
@@ -31,7 +31,7 @@ function Register() {
           if (res.status === 200) {
           setMsg("LOADING...");
           sessionStorage.setItem("token", res.data.access_token);
-          navigate('/')
+          navigate('/perfil')
       }
       })
       .catch(err => {

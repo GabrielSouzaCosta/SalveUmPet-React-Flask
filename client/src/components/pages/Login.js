@@ -12,7 +12,7 @@ export default function Login() {
 
     useEffect(()=>{
         if(sessionStorage.getItem("token")) {
-            navigate('/')
+            navigate('/perfil')
     }})
 
     async function login() {
@@ -29,7 +29,7 @@ export default function Login() {
             if (res.status === 200) {
             setMsg("Logging in...");
             sessionStorage.setItem("token", res.data.access_token);
-            navigate('/')
+            navigate('/perfil')
         }
         })
         .catch(err => {

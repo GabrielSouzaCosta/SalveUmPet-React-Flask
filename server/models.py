@@ -17,6 +17,7 @@ class User(db.Model):
     password = db.Column(db.String)
     createdAt = db.Column(db.DateTime, default=datetime.now)
     animals = db.relationship('Animal', backref='user', lazy=True)
+    files = db.relationship('ProfilePhoto', cascade='all, delete', backref="user", lazy=True)
 
     def __init__(self, email, name, password):
         self.email = email
@@ -67,9 +68,18 @@ class Upload(db.Model):
         self.url = url
         self.owner = owner
 
+class ProfilePhoto(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    url = db.Column(db.String)
+    owner = db.Column(db.Integer, db.ForeignKey("user.id"))
+
+    def __init__(self, url, owner):
+        self.url = url
+        self.owner = owner
+
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ('name', 'email')
+        fields = ('id', 'name', 'email')
 
 class AnimalSchema(ma.Schema):
     class Meta:

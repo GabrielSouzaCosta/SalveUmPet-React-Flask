@@ -69,6 +69,9 @@ def login():
 @jwt_required()
 def profile():
     user = user_schema.dump(User.query.filter_by(email=get_jwt_identity()).one_or_none())
+    image = upload_schema.dump(ProfilePhoto.query.filter_by(owner=user['id']).first())
+    if image:
+        user['photo'] = image['url']
     return jsonify(user)
 
 @app.route('/api/add_post', methods = ['POST'])
@@ -122,11 +125,11 @@ def get_dogs():
 @jwt_required()
 def upload_image(id):
     files = request.files.getlist("file")
-    print(files, len(files))
+    prof_photo = request.files['profile_photo']
     if files:
         if len(files) == 1:
-            files.filename = secure_filename(files.filename)
-            output = upload_file_to_s3(files, app.config["S3_BUCKET"])
+            files[0].filename = secure_filename(files[0].filename)
+            output = upload_file_to_s3(files[0], app.config["S3_BUCKET"])
             upload = Upload(url=output, owner=id)
             db.session.add(upload)
             db.session.commit()
@@ -137,9 +140,22 @@ def upload_image(id):
                 upload = Upload(url=output, owner=id)
                 db.session.add(upload)
                 db.session.commit()
-
         return str(output)
-    
+
+    elif prof_photo:
+        prof_photo.filename = secure_filename(prof_photo.filename)
+        output = upload_file_to_s3(prof_photo, app.config["S3_BUCKET"])
+        users_images = ProfilePhoto.query.filter_by(owner=id)
+        if users_images:
+            for img in users_images:
+                db.session.delete(img)
+            db.session.commit()
+        upload = ProfilePhoto(url=output, owner=id)
+        db.session.add(upload)
+        db.session.commit()
+        images = uploads_schema.dump(ProfilePhoto.query.filter_by(owner=id))
+        return str(output)
+
     else:
         return "Escolha uma foto"
 
