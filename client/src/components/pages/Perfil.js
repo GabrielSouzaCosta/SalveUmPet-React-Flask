@@ -20,10 +20,7 @@ export default function Perfil() {
         var formData = new FormData();
         formData.append("profile_photo", photo);
         await axios.post(`/api/upload_image/${user.id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") }} )
-    }
-
-
-    
+    }    
     
   return (
     <div className='vh-100'>
@@ -45,22 +42,22 @@ export default function Perfil() {
           </div>
         </div>
           
-          <div className='d-flex justify-content-around align-items-center'>
-              <div className='w-50'>
-                <span className='card btn bg-warning h-100 mb-3 fs-5 fw-bold text-center text-uppercase py-1 mx-2'>Meus pets para adoção</span>
+          <div className='d-flex justify-content-around'>
+              <div className='w-50 h-100'>
+                <span className='card btn bg-warning h-100 mb-2 fs-5 fw-bold text-center text-uppercase py-1 mx-2'>Meus pets para adoção</span>
 
                 <div className='row w-100'>
                 {(user.animals) ? user.animals.map((animal) => {
                   return (
-                      <div key={animal.id} className='col-md-6 col-lg-3 mb-4 mb-lg-0'>
-                        <div className="card mb-2">
-                          <div className='card-header text-center fs-4 fw-bold p-0'>{animal.name}</div>
+                      <div key={animal.id} className='col-md-4 col-lg-6 mb-2'>
+                        <div className="card mb-2 ms-2">
+                          <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-header text-center fs-4 fw-bold p-0'>{animal.name}</div>
                           <div className="card-body text-center fs-5 p-0">
                             <Link to={`/${animal.category}s/${animal.id}`} key={`link-${animal.id}`}>
-                              {(animal.image)? <img key={`image-${animal.id}`} style={{height: "320px"}} className="card-img-top" src={animal.image} alt="animal"/> :
-                                              <img key={`image-${animal.id}`}  style={{height: "320px"}} className="card-img-top" src="assets/images/nophoto.png" alt="animal"/>}
+                              {(animal.image)? <img key={`image-${animal.id}`} className="card-img-top" src={animal.image} alt="animal"/> :
+                                              <img key={`image-${animal.id}`}  className="card-img-top" src="assets/images/nophoto.png" alt="animal"/>}
                             </Link>
-                            <div className='card-footer' key={`description-${animal.id}`} >
+                            <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-footer' key={`description-${animal.id}`} >
                               <p className="card-text m-0">Idade: {(animal.years === 1) ? `${animal.years} ano`:""} {(animal.years > 1) ? `${animal.years} anos`: ""} {(animal.years && animal.months) ? " e ": ""} {(animal.months === 1) ? `${animal.months} mês` : ""}  {(animal.months > 1) ? `${animal.months} meses` : ""}</p>
                               <p className="card-text fs-5">{animal.details}</p>
                             </div>

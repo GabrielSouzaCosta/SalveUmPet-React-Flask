@@ -73,6 +73,11 @@ def profile():
     image = upload_schema.dump(ProfilePhoto.query.filter_by(owner=user['id']).first())
     if image:
         user['photo'] = image['url']
+    for animal in user['animals']:
+        animal['image'] = "/assets/images/nophoto.png"
+        img = upload_schema.dump(Upload.query.filter_by(owner=animal['id']).first())
+        if img:
+            animal['image'] = img['url']
     return jsonify(user)
 
 @app.route('/api/add_post', methods = ['POST'])
