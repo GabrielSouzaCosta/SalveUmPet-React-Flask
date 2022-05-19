@@ -1,3 +1,4 @@
+from email.policy import default
 from hmac import compare_digest
 from app import app
 from flask_sqlalchemy import SQLAlchemy
@@ -38,10 +39,11 @@ class Animal(db.Model):
     playful_rating = db.Column(db.Integer, default=100)
     kind_rating = db.Column(db.Integer, default=100)
     published_date = db.Column(db.DateTime, default=datetime.now)
-    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    is_interest = db.Column(db.Boolean, default=False)
     files = db.relationship('Upload', cascade='all, delete', backref="animal", lazy=True)
 
-    def __init__(self, name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner):
+    def __init__(self, name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner, is_interest=False):
         self.name = name
         self.category = category
         self.years = years
@@ -51,6 +53,7 @@ class Animal(db.Model):
         self.playful_rating = playful_rating
         self.kind_rating = kind_rating
         self.owner = owner
+        self.is_interest = is_interest
 
 
     def add(self):
@@ -72,7 +75,7 @@ class Upload(db.Model):
 # Schemas
 class AnimalSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'category', 'years', 'months', 'details', 'cute_rating', 'playful_rating', 'kind_rating', 'published_date', 'owner')
+        fields = ('id', 'name', 'category', 'years', 'months', 'details', 'cute_rating', 'playful_rating', 'kind_rating', 'published_date', 'owner', 'is_interest')
 
 class ProfilePhoto(db.Model):
     id = db.Column(db.Integer, primary_key=True)

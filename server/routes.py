@@ -71,6 +71,9 @@ def login():
 def profile():
     user = user_schema.dump(User.query.filter_by(email=get_jwt_identity()).one_or_none())
     image = upload_schema.dump(ProfilePhoto.query.filter_by(owner=user['id']).first())
+    interests = animals_schema.dump(Animal.query.filter_by(owner=user['id'], is_interest=True))
+    if interests:
+        user['interests'] = interests
     if image:
         user['photo'] = image['url']
     for animal in user['animals']:
@@ -91,8 +94,18 @@ def add_post():
      cute_rating = request.json['cute_rating']
      playful_rating = request.json['playful_rating']
      kind_rating = request.json['kind_rating']
-     owner = User.query.filter_by(email=get_jwt_identity()).one_or_none()
-     animal = Animal(name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner=owner.id)
+     user = User.query.filter_by(email=get_jwt_identity()).one_or_none()
+     animal = Animal(name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner=user.id)
+     animal.add()
+
+     return animal_schema.jsonify(animal)
+
+@app.route('/api/add_interest', methods = ['POST'])
+@jwt_required()
+def add_interest():
+     data = request.json
+     user = User.query.filter_by(email=get_jwt_identity()).one_or_none()
+     animal = Animal(data['name'], data['category'], data['years'], data['months'], data['details'], data['cute_rating'], data['playful_rating'], data['kind_rating'], owner=user.id, is_interest=True)
      animal.add()
 
      return animal_schema.jsonify(animal)
@@ -120,7 +133,6 @@ def cat_details(id):
      animal = animal_schema.dump(Animal.query.get(id))
      images = uploads_schema.dump(Upload.query.filter_by(owner=id))
      animal['images'] = images
-
      return animal
 
 @app.route('/api/animals/dogs', methods = ['GET'])

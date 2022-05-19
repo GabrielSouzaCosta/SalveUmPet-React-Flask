@@ -6,9 +6,10 @@ import Navbar from '../Navbar';
 export default function Perfil() {
     const [user, setUser] = useState({});
     const [photo, setPhoto] = useState("");
+    const [interests, setInterests] = useState([])
 
     useEffect(() => {
-        axios.get('/api/profile', {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} }).then(res => setUser(res.data) );
+        axios.get('/api/profile', {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} }).then(res => {setUser(res.data); setInterests(res.data.interests)} );
     }, [])
 
     function handleUploadChange(e) {
@@ -49,9 +50,12 @@ export default function Perfil() {
                 <div className='row w-100'>
                 {(user.animals) ? user.animals.map((animal) => {
                   return (
-                      <div key={animal.id} className='col-md-4 col-lg-6 mb-2'>
+                      <div key={animal.id} className='col-md-11 col-lg-10 mb-2 m-auto'>
                         <div className="card mb-2 ms-2">
-                          <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-header text-center fs-4 fw-bold p-0'>{animal.name}</div>
+                          <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-header text-center fs-4 fw-bold p-1'>
+                            {animal.name}
+                            <Link to={'/atualizar_post'} style={{color: "rgb(252, 222, 102)"}} className={"btn btn-dark float-end"}>Editar</Link>
+                          </div>
                           <div className="card-body text-center fs-5 p-0">
                             <Link to={`/${animal.category}s/${animal.id}`} key={`link-${animal.id}`}>
                               {(animal.image)? <img key={`image-${animal.id}`} className="card-img-top" src={animal.image} alt="animal"/> :
@@ -69,8 +73,35 @@ export default function Perfil() {
                 </div>
               
               </div>
+              
+              <div className='w-50 h-100'>
+                <span className='card btn bg-success h-100 mb-2 fs-5 fw-bold text-uppercase py-1 mx-2'>Pets que quero adotar</span>
 
-              <span className='w-50 card  btn bg-success h-100 mb-3 fs-5 fw-bold text-uppercase py-1 mx-2'>Pets que quero adotar</span>
+                <div className='row w-100'>
+                  {(interests) ? interests.map((animal) => {
+                    return (
+                      <div key={animal.id} className='col-md-11 col-lg-10 mb-2 m-auto'>
+                          <div className="card mb-2 ms-2">
+                            <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-header text-center fs-4 fw-bold p-1'>
+                              {animal.name}
+                              <button style={{color: "rgb(252, 222, 102)"}} className='btn btn-dark float-end'>Remover interesse</button>
+                            </div>
+                            <div className="card-body text-center fs-5 p-0">
+                              <Link to={`/${animal.category}s/${animal.id}`} key={`link-${animal.id}`}>
+                                {(animal.image)? <img key={`image-${animal.id}`} className="card-img-top" src={animal.image} alt="animal"/> :
+                                                <img key={`image-${animal.id}`}  className="card-img-top" src="assets/images/nophoto.png" alt="animal"/>}
+                              </Link>
+                              <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-footer' key={`description-${animal.id}`} >
+                                <p className="card-text m-0">Idade: {(animal.years === 1) ? `${animal.years} ano`:""} {(animal.years > 1) ? `${animal.years} anos`: ""} {(animal.years && animal.months) ? " e ": ""} {(animal.months === 1) ? `${animal.months} mês` : ""}  {(animal.months > 1) ? `${animal.months} meses` : ""}</p>
+                                <p className="card-text fs-5">{animal.details}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    )
+                  }) : ""}
+                </div>
+              </div>
 
           </div>
 

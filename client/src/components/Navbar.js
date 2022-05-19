@@ -16,7 +16,7 @@ function Navbar () {
 
 
     return (<>
-            <nav  className="navbar navbar-expand-lg sticky-top p-0">
+            <nav  className="navbar navbar-expand-lg sticky-top p-0 w-100">
                 <div style={{backgroundColor: "#e98a15ff"}} className="container-fluid w-100 h-100">
                     <NavLink to="/" className={"navbar-brand"}><img height={"30px"} alt="logo" className="pb-1" src="/assets/images/logo.png"/></NavLink>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
