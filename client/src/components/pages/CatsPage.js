@@ -15,16 +15,15 @@ export default function CatsPage() {
     }).then(res => res.json())
     .then(res => setCats(res))
     .catch(error => console.log(error))
-    
   }, [])
 
   return (
     <>
     <Navbar />
-    <div className="h-100">
+    <div className="vh-100">
       
     <div className="container-fluid h-100">
-        <h1 className='display-4 text-center mb-5 pt-2 fw-bolder text-grey'>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
+        <h1 className='display-4 text-center mb-5 pt-2 fw-bolder'>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
         {(cats) ? 
           <div className='row'>
                 {cats.map(cat => {                    

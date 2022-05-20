@@ -7,26 +7,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaw } from '@fortawesome/free-solid-svg-icons';
 
 
-export default function CatPost() {
-  const [cat, setCat] = useState({});
-  const [images, setImages] = useState([]);
-  const [isInterest, setIsInterest] = useState(false);
-  
+export default function DogPost() {
+  const [dog, setdog] = useState({})
+  const [images, setImages] = useState([])
+
   const params = useParams();
   const navigate = useNavigate();
-  
+
   async function handleAdoption() {
-    console.log(cat)
-    await axios.post('/api/add_interest', cat, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); navigate('/perfil')})
+    console.log(dog)
+    await axios.post('/api/add_interest', dog, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); navigate('/perfil')})
   }
-  
+
   useEffect(() => {
-    async function getCat() {
-      await axios.get(`/api/animals/${params.id}`)
-      .then(res => {setImages(res.data.images); setCat(res.data)}  );
+    async function getdog() {
+      await axios.get(`/api/animals/${params.id}/`)
+      .then(res => {setImages(res.data.images); setdog(res.data)} );
     }
-    getCat();
-    axios.get(`/is_on_interest/${params.id}/`, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); setIsInterest(res.data.is_interest)} )
+    getdog();
+    console.log(dog)
   }, [params.id]);
 
   return (
@@ -65,14 +64,14 @@ export default function CatPost() {
                           )
                         }
                     }) : 
-                      <div className="carousel-item active">
-                          <div style={{height:"600px"}} className='w-100 d-flex align-items-center'>
-                            <img style={{width: "70%"}} className="d-block h-100 w-md-75 w-lg-50 m-auto" src="/assets/images/nophotogato.png" alt="animal"/>
-                          </div>
-                      </div> 
+                    <div className="carousel-item active">
+                        <div style={{height:"600px"}} className='w-100 d-flex align-items-center'>
+                        <img style={{width: "90%"}} className="d-block h-100 w-md-75 w-lg-50 m-auto" src="/assets/images/nophotodog.png" alt="animal"/>
+                        </div>
+                    </div> 
                     }
-                </div>
                     
+                </div>
                 <button className="carousel-control-prev" type="button" data-bs-target="#carousel-pet"
                     data-bs-slide="prev">
                     <span className="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -86,23 +85,23 @@ export default function CatPost() {
         </div>
 
             <div className='text-white m-auto p-5 w-100'>
-              <h1 className='display-4 text-center pb-4'>{cat.name}</h1>
-              <p className='fs-3'>Como ele é: {cat.details}</p>
-              <p className='fs-3'>Idade: {cat.years} anos e {cat.months} meses.</p> 
-              {(cat.published_date) ?
-              <p className='fs-3'>Publicado em: {cat.published_date.substring(0, 10).split('-').reverse().join("/")}</p> : ""}
+              <h1 className='display-4 text-center pb-4'>{dog.name}</h1>
+              <p className='fs-3'>Como ele é: {dog.details}</p>
+              <p className='fs-3'>Idade: {dog.years} anos e {dog.months} meses.</p> 
+              {(dog.published_date) ?
+              <p className='fs-3'>Publicado em: {dog.published_date.substring(0, 10).split('-').reverse().join("/")}</p> : ""}
              
               <div className='mb-1 fs-5'>
-                Fofinho: <Rating ratingValue={cat.cute_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
+                Fofinho: <Rating ratingValue={dog.cute_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
               </div>
               <div className='mb-2 fs-5'>
-                  Brincalhão: <Rating  ratingValue={cat.playful_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />} />
+                  Brincalhão: <Rating  ratingValue={dog.playful_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />} />
               </div>
               <div className='mb-3 fs-5'>
-                  Carinhoso: <Rating ratingValue={cat.kind_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
+                  Carinhoso: <Rating ratingValue={dog.kind_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
               </div>
 
-              {(sessionStorage.getItem("token") && isInterest === false) ?
+              {(sessionStorage.getItem("token")) ?
                 <button className='btn btn-outline-warning' onClick={handleAdoption}>Quero adotar</button> :
                 <Link to="/login"><button className='btn btn-outline-warning'>Faça login para adotar</button></Link>
               }

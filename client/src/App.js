@@ -7,6 +7,7 @@ import DogsPage from './components/pages/DogsPage';
 import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import CatPost from './components/pages/CatPost';
+import DogPost from './components/pages/DogPost';
 import NewPost from './components/pages/NewPost';
 import Perfil from './components/pages/Perfil';
 import UpdatePost from './components/pages/UpdatePost';
@@ -19,8 +20,9 @@ function App() {
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/gatos' element={<CatsPage />} />
-          <Route path='/dogs' element={<DogsPage />} />
           <Route path='/gatos/:id' element={<CatPost />} />
+          <Route path='/dogs' element={<DogsPage />} />
+          <Route path='/dogs/:id' element={<DogPost />} />
           <Route path='/new_post' element={<NewPost />} />
           <Route path='/atualizar_post/:id' element={<UpdatePost />} />
           <Route path='/perfil' element={<Perfil />} />
@@ -29,8 +31,6 @@ function App() {
         </Routes>
       </BrowserRouter>
      
-
-
   )
 }
 

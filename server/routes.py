@@ -77,28 +77,50 @@ def profile():
     if image:
         user['photo'] = image['url']
     for animal in user['animals']:
-        animal['image'] = "/assets/images/nophoto.png"
         img = upload_schema.dump(Upload.query.filter_by(owner=animal['id']).first())
         if img:
             animal['image'] = img['url']
     return jsonify(user)
 
+@app.route('/api/animals/<id>/', methods = ['GET'])
+def pet_details(id):
+     pet = animal_schema.dump(Animal.query.get(id))
+     images = uploads_schema.dump(Upload.query.filter_by(owner=id))
+     pet['images'] = images
+     return pet
+
+@app.route('/api/animals/cats', methods = ['GET'])
+def get_cats():
+     cats = Animal.query.filter_by(category="gato")
+     results = animals_schema.dump(cats)
+     for cat in results:
+        cat['image'] = "/assets/images/nophotogato.png"
+        img = upload_schema.dump(Upload.query.filter_by(owner=cat['id']).first())
+        if img:
+            cat['image'] = img['url']
+     return jsonify(results)
+
+
+@app.route('/api/animals/dogs', methods = ['GET'])
+def get_dogs():
+     dogs = animals_schema.dump(Animal.query.filter_by(category="dog"))
+     for dog in dogs:
+        dog['image'] = "/assets/images/nophotodog.png"
+        img = upload_schema.dump(Upload.query.filter_by(owner=dog['id']).first())
+        if img:
+            dog['image'] = img['url']
+     return jsonify(dogs)
+
 @app.route('/api/add_post', methods = ['POST'])
 @jwt_required()
 def add_post():
-     name = request.json['name']
-     category = request.json['category']
-     years = request.json['years']
-     months = request.json['months']
-     details = request.json['details']
-     cute_rating = request.json['cute_rating']
-     playful_rating = request.json['playful_rating']
-     kind_rating = request.json['kind_rating']
+     data = request.json
      user = User.query.filter_by(email=get_jwt_identity()).one_or_none()
-     animal = Animal(name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner=user.id)
+     animal = Animal(data['name'], data['category'], data['years'], data['months'], data['details'], data['cute_rating'], data['playful_rating'], data['kind_rating'], owner=user.id)
      animal.add()
 
      return animal_schema.jsonify(animal)
+
 
 @app.route('/api/add_interest', methods = ['POST'])
 @jwt_required()
@@ -110,42 +132,34 @@ def add_interest():
 
      return animal_schema.jsonify(animal)
 
-@app.route('/api/animals/<id>', methods = ['GET'])
-def get_pet(id):
-    pet = animal_schema.dump(Animal.query.get(id))
-    print(pet)
-    return jsonify(pet)
+@app.route('/is_on_interest/<id>/', methods = ['GET'])
+@jwt_required()
+def check_interest(id):
+    user = User.query.filter_by(email=get_jwt_identity()).one_or_none()
+    pet = Animal.query.get(id)
+    if pet.is_interest == True and pet.owner == user.id:
+        return {"is_interest": True}
+    else:
+        return {"is_interest": False}
 
-@app.route('/api/animals/cats', methods = ['GET'])
-def get_cats():
-     category = "gato"
-     cats = Animal.query.filter_by(category=category)
-     results = animals_schema.dump(cats)
-     for cat in results:
-        cat['image'] = "/assets/images/nophoto.png"
-        img = upload_schema.dump(Upload.query.filter_by(owner=cat['id']).first())
-        if img:
-            cat['image'] = img['url']
-     return jsonify(results)
-
-@app.route('/api/animals/cats/<id>/', methods = ['GET'])
-def cat_details(id):
-     animal = animal_schema.dump(Animal.query.get(id))
-     images = uploads_schema.dump(Upload.query.filter_by(owner=id))
-     animal['images'] = images
-     return animal
-
-@app.route('/api/update/<id>/', methods = ['PUT'])
+@app.route('/api/update/<id>/', methods = ['PUT', 'POST'])
+@jwt_required()
 def update_post(id):
-     animal = Animal.query.get(id)
-     data = request.json
-     animal.name, animal.details, animal.years, animal.months = data['name'], data['details'], data['years'], data['months']
-     animal.cute_rating, animal.playful_rating, animal.kind_rating= data['cute_rating'], data['playful_rating'], data['kind_rating']
+    animal = Animal.query.get(id)
+    data = request.json
+    animal.name, animal.details, animal.years, animal.months = data['name'], data['details'], data['years'], data['months']
+    animal.cute_rating, animal.playful_rating, animal.kind_rating= data['cute_rating'], data['playful_rating'], data['kind_rating']
+    images = Upload.query.filter_by(owner=id)
+    if images:
+        for img in images:
+            db.session.delete(img)
+        db.session.commit()
 
-     db.session.commit()
-     return animal_schema.jsonify(animal)
+    db.session.commit()
+    return animal_schema.jsonify(animal)
 
 @app.route('/api/delete/<id>/', methods = ['DELETE'])
+@jwt_required()
 def delete_post(id):
      animal = Animal.query.get(id)
      db.session.delete(animal)
@@ -153,11 +167,6 @@ def delete_post(id):
 
      return animal_schema.jsonify(animal)
 
-@app.route('/api/animals/dogs', methods = ['GET'])
-def get_dogs():
-     dogs = Animal.query.filter(Animal.category == "dog")
-     results = animals_schema.dump(dogs)
-     return jsonify(results)
 
 @app.route('/api/upload_image/<id>', methods = ['POST'])
 @jwt_required()

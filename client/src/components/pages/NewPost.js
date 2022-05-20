@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 function NewPost() {
-    const [animal, setAnimal] = useState({name: "", category: "", animalDetails: "", cuteRating: 90, playfulRating: 85, kindRating: 100})
+    const [animal, setAnimal] = useState({name: "", category: "", details: "", cute_rating: 90, playful_rating: 85, kind_rating: 100})
     const [age, setAge] = useState({"years": 0, "months": 0});
     const [files, setFiles] = useState([]);
 
@@ -25,8 +25,8 @@ function NewPost() {
 
     async function handleNewPost(e) {
         e.preventDefault()
-        await axios.post('/api/add_post', {"name": animal.name, "category": animal.category, "years": age.years, "months": age.months, "details": animal.animalDetails, "cute_rating": animal.cuteRating, "playful_rating": animal.playfulRating, "kind_rating": animal.kindRating}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } })
-        .then(res => handleUpload(res.data.id))
+        await axios.post('/api/add_post', {"name": animal.name, "category": animal.category, "years": age.years, "months": age.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } })
+        .then(res => { handleUpload(res.data.id); navigate(`/perfil`) } )
         .catch(err => {if (err.response.data.msg === "Missing Authorization Header") {
             console.log(err.response.data.msg);
             sessionStorage.removeItem("token");
@@ -50,17 +50,17 @@ function NewPost() {
             case "category":
                 setAnimal({...animal, category: e.target.value})
                 break
-            case "animalDetails":
-                setAnimal({...animal, animalDetails: e.target.value})
+            case "details":
+                setAnimal({...animal, details: e.target.value})
                 break
-            case "cuteRating":
-                setAnimal({...animal, cuteRating: e})
+            case "cute_rating":
+                setAnimal({...animal, cute_rating: e})
                 break
-            case "playfulRating":
-                setAnimal({...animal, playfulRating: e})
+            case "playful_rating":
+                setAnimal({...animal, playful_rating: e})
                 break
-            case "kindRating":
-                setAnimal({...animal, kindRating: e})
+            case "kind_rating":
+                setAnimal({...animal, kind_rating: e})
                 break
             default:
                 break

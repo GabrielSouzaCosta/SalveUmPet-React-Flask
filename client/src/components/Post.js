@@ -4,9 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaw } from '@fortawesome/free-solid-svg-icons';
 import Navbar from './Navbar';
 
-function Post(props) {
+function Post(props) {  
   return (<>
-
     <div style={{backgroundColor: "#110011ee"}} className='h-100 pb-5'>
         <Navbar />
       <div style={{backgroundColor: "#904e55ee", width: "90%"}} className='container-sm text-white my-5 h-100'>
@@ -33,12 +32,18 @@ function Post(props) {
 
             <label className='mt-3 mb-1' htmlFor='name'>Nome do bichinho:</label>
             <input className='form-control w-25 mb-3' value={props.animal.name} onChange={(e)=> props.handleAnimalChange(e, "name")} id='name' required></input>
-                <div className='d-flex align-items-center justify-content-center' onChange={(e) => props.handleAnimalChange(e, "category")} > 
-                    <input style={{backgroundColor:"black"}} type="radio" id="cat" name="drone" value="gato"/>
-                    <label htmlFor="cat" className='mx-1'><img style={{width: "50px"}} alt="escolher gato" src='/assets/images/cat.png'/></label> 
-                    <input type="radio" id="dog" name="drone" value="cachorro"/>
+                {(props.animal.is_interest === false) ?
+                    <div className='d-flex align-items-center justify-content-center' >
+                        <img style={{width: "50px"}} alt="gato" src={`/assets/images/${props.animal.category}.png`}/>
+                    </div>
+                    : 
+                    <div className='d-flex align-items-center justify-content-center' onChange={(e) => props.handleAnimalChange(e, "category")} > 
+                    <input style={{backgroundColor:"black"}} type="radio" id="cat" name="gato" value="gato"/>
+                    <label htmlFor="cat" className='mx-1'><img style={{width: "50px"}} alt="escolher gato" src='/assets/images/gato.png'/></label> 
+                    <input type="radio" id="dog" name="dog" value="dog"/>
                     <label htmlFor="dog" className="ms-1"><img style={{width: "50px"}} alt="escolher cachorro" src='/assets/images/dog.png'/></label>
-                </div>
+                    </div>
+                }
 
 
             <label className='my-2' htmlFor='age'>Idade:</label>
@@ -49,15 +54,15 @@ function Post(props) {
                 <input className='form-control w-50' value={props.age.months} onChange={(e) => props.handleAgeChange(e, "months") } max="11" id='monthsOld' type="number" />
             </div>
             <label className='my-2' htmlFor='details'>Como seu bichinho é?</label>
-            <textarea id='details' required value={props.animal.animalDetails} onChange={ (e) => props.handleAnimalChange(e, "animalDetails") } className="form-control w-25 mb-2" rows="3" cols="40"/>
+            <textarea id='details' required value={props.animal.details} onChange={ (e) => props.handleAnimalChange(e, "details") } className="form-control w-25 mb-2" rows="3" cols="40"/>
             <div className='mb-1'>
-                Fofinho: <Rating ratingValue={props.animal.cuteRating} allowHalfIcon={true} onClick={ (e) => props.handleAnimalChange(e, "cuteRating") } emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
+                Fofinho: <Rating ratingValue={props.animal.cute_rating} allowHalfIcon={true} onClick={ (e) => props.handleAnimalChange(e, "cute_rating") } emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
             </div>
             <div className='mb-2'>
-                Brincalhão: <Rating  ratingValue={props.animal.playfulRating} allowHalfIcon={true} onClick={ (e) => props.handleAnimalChange(e, "playfulRating") }  emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />} />
+                Brincalhão: <Rating  ratingValue={props.animal.playful_rating} allowHalfIcon={true} onClick={ (e) => props.handleAnimalChange(e, "playful_rating") }  emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />} />
             </div>
             <div className='mb-2'>
-                Carinhoso: <Rating required ratingValue={props.animal.kindRating} allowHalfIcon={true} onClick={ (e) => props.handleAnimalChange(e, "kindRating") } emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
+                Carinhoso: <Rating required ratingValue={props.animal.kind_rating} allowHalfIcon={true} onClick={ (e) => props.handleAnimalChange(e, "kind_rating") } emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
             </div>
 
             <div>
@@ -65,8 +70,14 @@ function Post(props) {
             <label htmlFor="acceptAdoption" className="form-check-label">Eu aceito realizar uma doação responsável</label>
 
         </div>
-          
-            <input type="submit" className='btn btn-warning text-success mt-3 mb-5' value="Doar meu pet"></input>
+            {(props.animal.is_interest === false) ?
+            <div className='d-flex justify-content-around w-25'>
+                <input type="submit" className='btn btn-warning mt-3 mb-5' value="Salvar Alterações"></input>
+                <button className='btn btn-danger mt-3 mb-5' onClick={props.handleDeletePost}>Excluir Publicação</button>
+            </div>
+            :
+            <input type="submit" className='btn btn-warning text-success mt-3 mb-5' value="Doar meu pet"></input> 
+            }
 
           </div>
 

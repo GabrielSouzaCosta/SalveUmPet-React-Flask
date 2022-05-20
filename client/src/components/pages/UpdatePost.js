@@ -13,11 +13,26 @@ export default function UpdatePost() {
     
     useEffect(() => {
         axios.get(`/api/animals/${params.id}`).then(res => {console.log(res); setAnimal(res.data)})
-    }, [])
+    }, [params.id])
 
-    function UpdatePost() {
-        axios.post(`/api/update/${animal.id}`).then(res => console.log(res));
-        navigate('/perfil');
+    function updatePost(e) {
+        e.preventDefault()
+        axios.post(`/api/update/${animal.id}/`, {"name": animal.name, "category": animal.category, "years": age.years, "months": age.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating} ,{ headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} })
+        .then(res => { handleUpload(res.data.id); navigate(`/perfil`) } )
+        .catch(err => {if (err.response.data.msg === "Missing Authorization Header") {
+            console.log(err.response.data.msg);
+            sessionStorage.removeItem("token");
+            navigate("/login");
+            window.alert('Sessão expirada, por favor fazer login novamente');
+        } })
+    }
+
+    function handleDeletePost(e) {
+        e.preventDefault();
+        let excluir = window.confirm("Quer mesmo excluir a postagem?");
+        if (excluir) {
+            axios.delete(`/api/delete/${animal.id}/`, { headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} } ).then(res => navigate('/perfil'));
+        }
     }
 
     async function handleUpload(id) {
@@ -47,22 +62,23 @@ export default function UpdatePost() {
             case "category":
                 setAnimal({...animal, category: e.target.value})
                 break
-            case "animalDetails":
-                setAnimal({...animal, animalDetails: e.target.value})
+            case "details":
+                setAnimal({...animal, details: e.target.value})
                 break
-            case "cuteRating":
-                setAnimal({...animal, cuteRating: e})
+            case "cute_rating":
+                setAnimal({...animal, cute_rating: e})
                 break
-            case "playfulRating":
-                setAnimal({...animal, playfulRating: e})
+            case "playful_rating":
+                setAnimal({...animal, playful_rating: e})
                 break
-            case "kindRating":
-                setAnimal({...animal, kindRating: e})
+            case "kind_rating":
+                setAnimal({...animal, kind_rating: e})
                 break
             default:
                 break
         }
     }
+
 
     function handleAgeChange(e, t) {
         e.preventDefault();
@@ -76,6 +92,6 @@ export default function UpdatePost() {
     
 
     return (<>
-        <Post handlePost={UpdatePost} handleAnimalChange={handleAnimalChange} handleAgeChange={handleAgeChange} handleUploadChange={handleUploadChange} handleUpload={handleUpload} animal={animal} age={age} files={files}/>
+        <Post handlePost={updatePost} handleDeletePost={handleDeletePost} handleAnimalChange={handleAnimalChange} handleAgeChange={handleAgeChange} handleUploadChange={handleUploadChange} handleUpload={handleUpload} animal={animal} age={age} files={files}/>
     </>)
     }
