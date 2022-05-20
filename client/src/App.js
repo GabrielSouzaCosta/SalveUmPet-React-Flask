@@ -22,7 +22,7 @@ function App() {
           <Route path='/dogs' element={<DogsPage />} />
           <Route path='/gatos/:id' element={<CatPost />} />
           <Route path='/new_post' element={<NewPost />} />
-          <Route path='/atualizar_post' element={<UpdatePost />} />
+          <Route path='/atualizar_post/:id' element={<UpdatePost />} />
           <Route path='/perfil' element={<Perfil />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />

@@ -110,11 +110,11 @@ def add_interest():
 
      return animal_schema.jsonify(animal)
 
-@app.route('/api/animals', methods = ['GET'])
-def get_posts():
-    all_animals = Animal.query.all()
-    results = animals_schema.dump(all_animals)
-    return jsonify(results)
+@app.route('/api/animals/<id>', methods = ['GET'])
+def get_pet(id):
+    pet = animal_schema.dump(Animal.query.get(id))
+    print(pet)
+    return jsonify(pet)
 
 @app.route('/api/animals/cats', methods = ['GET'])
 def get_cats():
@@ -134,6 +134,24 @@ def cat_details(id):
      images = uploads_schema.dump(Upload.query.filter_by(owner=id))
      animal['images'] = images
      return animal
+
+@app.route('/api/update/<id>/', methods = ['PUT'])
+def update_post(id):
+     animal = Animal.query.get(id)
+     data = request.json
+     animal.name, animal.details, animal.years, animal.months = data['name'], data['details'], data['years'], data['months']
+     animal.cute_rating, animal.playful_rating, animal.kind_rating= data['cute_rating'], data['playful_rating'], data['kind_rating']
+
+     db.session.commit()
+     return animal_schema.jsonify(animal)
+
+@app.route('/api/delete/<id>/', methods = ['DELETE'])
+def delete_post(id):
+     animal = Animal.query.get(id)
+     db.session.delete(animal)
+     db.session.commit()
+
+     return animal_schema.jsonify(animal)
 
 @app.route('/api/animals/dogs', methods = ['GET'])
 def get_dogs():
@@ -187,27 +205,3 @@ def upload_image(id):
             db.session.commit()
             images = uploads_schema.dump(ProfilePhoto.query.filter_by(owner=id))
             return str(output)
-
-        
-
-@app.route('/api/update/<id>/', methods = ['PUT'])
-def update_post(id):
-     animal = Animal.query.get(id)
-     update_name = request.json['name']
-     update_animalDetails = request.json['details']
-     update_age = request.json['age']
-
-     animal.name = update_name
-     animal.animalDetails = update_animalDetails
-     animal.age = update_age
-
-     db.session.commit()
-     return animal_schema.jsonify(animal)
-
-@app.route('/api/delete/<id>/', methods = ['DELETE'])
-def delete_post(id):
-     animal = Animal.query.get(id)
-     db.session.delete(animal)
-     db.session.commit()
-
-     return animal_schema.jsonify(animal)

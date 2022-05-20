@@ -54,7 +54,7 @@ export default function Perfil() {
                         <div className="card mb-2 ms-2">
                           <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-header text-center fs-4 fw-bold p-1'>
                             {animal.name}
-                            <Link to={'/atualizar_post'} style={{color: "rgb(252, 222, 102)"}} className={"btn btn-dark float-end"}>Editar</Link>
+                            <Link to={`/atualizar_post/${animal.id}`} style={{color: "rgb(252, 222, 102)"}} className={"btn btn-dark float-end"}>Editar</Link>
                           </div>
                           <div className="card-body text-center fs-5 p-0">
                             <Link to={`/${animal.category}s/${animal.id}`} key={`link-${animal.id}`}>
