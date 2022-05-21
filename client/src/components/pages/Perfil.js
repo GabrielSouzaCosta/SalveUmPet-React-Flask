@@ -14,9 +14,9 @@ export default function Perfil() {
 
     async function handleDeleteInterest(e, id) {
       e.preventDefault();
-      await axios.delete(`/api/delete/${id}/`, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} } )
+      await axios.delete(`/api/remove_interest/${id}/`, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} } )
       .then(res => setInterests(interests.filter((interest) => {
-        if (interest.id !== res.data.id) {
+        if (interest.animal_id !== res.data.animal_id) {
           console.log(interest);
           return interest;
         }
@@ -141,12 +141,12 @@ export default function Perfil() {
             <div className="modal-body">
               <div className='d-flex flex-column justify-content-center align-items-center'>
                 {(user.photo && !photo) ?
-                  <img src={user.photo} className='border mb-2'  width={"300px"} alt="profile" /> : `${user.photo}`
+                  <img src={user.photo} className='border mb-2'  width={"300px"} alt="profile" /> : ""
                 }
                 {(photo) ? <img src={URL.createObjectURL(photo)} className='border mb-2'  width={"300px"} alt="profile" /> 
-                  : `${user.photo}`
+                  : ""
                 }
-                {(!photo && !user.photo) ? <img src="/assets/images/blank_profile.png" className='border mb-2' height={"300px"} alt="profile" />: "3"}
+                {(!photo && !user.photo) ? <img src="/assets/images/blank_profile.png" className='border mb-2' height={"300px"} alt="profile" />: ""}
                 <label htmlFor='photo' className='btn btn-warning'>Trocar foto</label>
                 <input className='d-none' type="file" id='photo' onChange={handleUploadChange}></input>
               </div>

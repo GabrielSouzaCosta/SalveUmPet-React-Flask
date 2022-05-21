@@ -19,6 +19,7 @@ class User(db.Model):
     createdAt = db.Column(db.DateTime, default=datetime.now)
     animals = db.relationship('Animal', backref='user', lazy=True)
     files = db.relationship('ProfilePhoto', cascade='all, delete', backref="user", lazy=True)
+    favorites = db.relationship('Favorite', cascade='all, delete', backref="user")
 
     def __init__(self, email, name, password):
         self.email = email
@@ -39,11 +40,10 @@ class Animal(db.Model):
     playful_rating = db.Column(db.Integer, default=100)
     kind_rating = db.Column(db.Integer, default=100)
     published_date = db.Column(db.DateTime, default=datetime.now)
-    owner = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    is_interest = db.Column(db.Boolean, default=False)
+    owner = db.Column(db.Integer, db.ForeignKey('user.id'))
     files = db.relationship('Upload', cascade='all, delete', backref="animal", lazy=True)
 
-    def __init__(self, name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner, is_interest=False):
+    def __init__(self, name, category, years, months, details, cute_rating, playful_rating, kind_rating, owner):
         self.name = name
         self.category = category
         self.years = years
@@ -53,8 +53,6 @@ class Animal(db.Model):
         self.playful_rating = playful_rating
         self.kind_rating = kind_rating
         self.owner = owner
-        self.is_interest = is_interest
-
 
     def add(self):
         db.session.add(self)
@@ -62,6 +60,12 @@ class Animal(db.Model):
 
     def __repr__(self):
         return f'{self.category}: {self.name}'
+    
+class Favorite(db.Model):
+    __tablename__ = "favorites"
+    id = db.Column(db.Integer, primary_key=True)
+    animal_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
 
 class Upload(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -72,11 +76,6 @@ class Upload(db.Model):
         self.url = url
         self.owner = owner
 
-# Schemas
-class AnimalSchema(ma.Schema):
-    class Meta:
-        fields = ('id', 'name', 'category', 'years', 'months', 'details', 'cute_rating', 'playful_rating', 'kind_rating', 'published_date', 'owner', 'is_interest')
-
 class ProfilePhoto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     url = db.Column(db.String)
@@ -85,6 +84,11 @@ class ProfilePhoto(db.Model):
     def __init__(self, url, owner):
         self.url = url
         self.owner = owner
+
+# Schemas
+class AnimalSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'category', 'years', 'months', 'details', 'cute_rating', 'playful_rating', 'kind_rating', 'published_date', 'owner')
 
 class UserSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -95,6 +99,9 @@ class UserSchema(ma.SQLAlchemySchema):
     name = ma.auto_field()
     animals = ma.Nested(AnimalSchema, many=True)
 
+class FavoriteSchema(ma.Schema):
+    class Meta:
+        fields = ('animal_id', 'user_id')
 
 class UploadSchema(ma.Schema):
     class Meta:
@@ -108,6 +115,9 @@ uploads_schema = UploadSchema(many=True)
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
+
+favorite_schema = FavoriteSchema(many=True)
+favorites_schema = FavoriteSchema(many=True)
 
 
 

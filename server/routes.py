@@ -69,9 +69,16 @@ def login():
 @app.route('/api/profile', methods=['GET'])
 @jwt_required()
 def profile():
+    interests = []
     user = user_schema.dump(User.query.filter_by(email=get_jwt_identity()).one_or_none())
     image = upload_schema.dump(ProfilePhoto.query.filter_by(owner=user['id']).first())
-    interests = animals_schema.dump(Animal.query.filter_by(owner=user['id'], is_interest=True))
+    favorites = favorites_schema.dump(Favorite.query.filter_by(user_id=user['id']))
+    for f in favorites:
+        interest = animal_schema.dump(Animal.query.get(f['animal_id']))
+        img = upload_schema.dump(Upload.query.filter_by(owner=f['animal_id']).first())
+        if img:
+            interest['image'] = img['url']  
+        interests.append(interest)
     if interests:
         user['interests'] = interests
     if image:
@@ -122,25 +129,31 @@ def add_post():
      return animal_schema.jsonify(animal)
 
 
-@app.route('/api/add_interest', methods = ['POST'])
+@app.route('/api/add_interest/', methods = ['POST'])
 @jwt_required()
 def add_interest():
-     data = request.json
-     user = User.query.filter_by(email=get_jwt_identity()).one_or_none()
-     animal = Animal(data['name'], data['category'], data['years'], data['months'], data['details'], data['cute_rating'], data['playful_rating'], data['kind_rating'], owner=user.id, is_interest=True)
-     animal.add()
-
-     return animal_schema.jsonify(animal)
-
-@app.route('/is_on_interest/<id>/', methods = ['GET'])
-@jwt_required()
-def check_interest(id):
     user = User.query.filter_by(email=get_jwt_identity()).one_or_none()
-    pet = Animal.query.get(id)
-    if pet.is_interest == True and pet.owner == user.id:
-        return {"is_interest": True}
+    if user.id != request.json['owner']:
+        interest = Favorite(animal_id=request.json['id'], user_id=user.id)
+        db.session.add(interest)
+        db.session.commit()
     else:
-        return {"is_interest": False}
+        return "User is the owner of the animal"
+    
+    print(favorites_schema.dump(Favorite.query.filter_by(user_id=user.id)), request.json['owner'])
+
+    return "Animal added to interests list"
+
+@app.route('/api/remove_interest/<id>/', methods = ['DELETE'])
+@jwt_required()
+def remove_interest(id):
+    interest = Favorite.query.filter_by(animal_id=id).all()
+    if interest:
+        for i in interest:
+            db.session.delete(i)
+        db.session.commit()
+
+    return jsonify(favorite_schema.dump(interest))
 
 @app.route('/api/update/<id>/', methods = ['PUT', 'POST'])
 @jwt_required()

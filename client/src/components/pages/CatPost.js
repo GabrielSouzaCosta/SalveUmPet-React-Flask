@@ -10,14 +10,12 @@ import { faPaw } from '@fortawesome/free-solid-svg-icons';
 export default function CatPost() {
   const [cat, setCat] = useState({});
   const [images, setImages] = useState([]);
-  const [isInterest, setIsInterest] = useState(false);
   
   const params = useParams();
   const navigate = useNavigate();
   
   async function handleAdoption() {
-    console.log(cat)
-    await axios.post('/api/add_interest', cat, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); navigate('/perfil')})
+    await axios.post(`/api/add_interest/`, {"id": cat.id, "owner": cat.owner} ,{headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); navigate('/perfil')})
   }
   
   useEffect(() => {
@@ -26,7 +24,6 @@ export default function CatPost() {
       .then(res => {setImages(res.data.images); setCat(res.data)}  );
     }
     getCat();
-    axios.get(`/is_on_interest/${params.id}/`, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); setIsInterest(res.data.is_interest)} )
   }, [params.id]);
 
   return (
@@ -102,7 +99,7 @@ export default function CatPost() {
                   Carinhoso: <Rating ratingValue={cat.kind_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
               </div>
 
-              {(sessionStorage.getItem("token") && isInterest === false) ?
+              {(sessionStorage.getItem("token"))?
                 <button className='btn btn-outline-warning' onClick={handleAdoption}>Quero adotar</button> :
                 <Link to="/login"><button className='btn btn-outline-warning'>Faça login para adotar</button></Link>
               }
