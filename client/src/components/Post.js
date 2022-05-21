@@ -14,8 +14,12 @@ function Post(props) {
           <div className='d-flex flex-column'>
           <form encType="multipart/form-data" onSubmit={(e) => e.preventDefault() }>
               <div className="d-flex flex-column justify-content-center align-items-center mt-1">
-                  <label className='btn btn-success' htmlFor="petImages">Fotinhas &#128525;</label>
-                  <input type="file" id="petImages" className='d-none' accept="image/*" multiple onChange={props.handleUploadChange}/>
+                  <label className='btn btn-success' htmlFor="petImages">Fotinhas &#128525;  (até 3 imagens)</label>
+                  <input type="file" id="petImages" className='d-none' accept="image/*" multiple onChange={(e) => {if (e.target.files.length < 4) {
+                       props.handleUploadChange(e);
+                  } else if (e.target.files.length > 3) {
+                    window.alert("Por favor selecione até 3 imagens")
+                  } }}/>
                   <div className='d-flex justify-content-center align-items-center pt-2'>
                   {props.files.map((file, i)=>{
                       return (
@@ -32,26 +36,18 @@ function Post(props) {
 
             <label className='mt-3 mb-1' htmlFor='name'>Nome do bichinho:</label>
             <input className='form-control w-25 mb-3' value={props.animal.name} onChange={(e)=> props.handleAnimalChange(e, "name")} id='name' required></input>
-                {(props.animal.is_interest === false) ?
-                    <div className='d-flex align-items-center justify-content-center' >
-                        <img style={{width: "50px"}} alt="gato" src={`/assets/images/${props.animal.category}.png`}/>
-                    </div>
-                    : 
                     <div className='d-flex align-items-center justify-content-center' onChange={(e) => props.handleAnimalChange(e, "category")} > 
-                    <input style={{backgroundColor:"black"}} type="radio" id="cat" name="gato" value="gato"/>
+                    <input style={{backgroundColor:"black"}} type="radio" id="cat" name="drone" value="gato"/>
                     <label htmlFor="cat" className='mx-1'><img style={{width: "50px"}} alt="escolher gato" src='/assets/images/gato.png'/></label> 
-                    <input type="radio" id="dog" name="dog" value="dog"/>
+                    <input type="radio" id="dog" name="drone" value="dog"/>
                     <label htmlFor="dog" className="ms-1"><img style={{width: "50px"}} alt="escolher cachorro" src='/assets/images/dog.png'/></label>
                     </div>
-                }
-
-
             <label className='my-2' htmlFor='age'>Idade:</label>
             <div className='d-flex justify-content-center align-items-center w-25 mt-1' id='age'>
                 <label htmlFor='yearsOld' className='me-1'>Anos:</label>
-                <input className='form-control w-50 me-1' value={props.age.years} onChange={(e) => props.handleAgeChange(e, "years") } id='yearsOld' type="number" />
+                <input className='form-control w-50 me-1' value={props.animal.years} onChange={(e) => props.handleAnimalChange(e, "years") } min="0" max="20" id='yearsOld' type="number" />
                 <label htmlFor='monthsOld' className='me-1'>Meses:</label>
-                <input className='form-control w-50' value={props.age.months} onChange={(e) => props.handleAgeChange(e, "months") } max="11" id='monthsOld' type="number" />
+                <input className='form-control w-50' value={props.animal.months} onChange={(e) => props.handleAnimalChange(e, "months") } min="0" max="11" id='monthsOld' type="number" />
             </div>
             <label className='my-2' htmlFor='details'>Como seu bichinho é?</label>
             <textarea id='details' required value={props.animal.details} onChange={ (e) => props.handleAnimalChange(e, "details") } className="form-control w-25 mb-2" rows="3" cols="40"/>

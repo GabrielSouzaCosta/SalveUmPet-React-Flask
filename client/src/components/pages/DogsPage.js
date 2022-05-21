@@ -38,7 +38,7 @@ export default function DogsPage() {
                               <img className="card-img-top h-100" src={dog.image} alt=""/>
                              </div> 
                           </Link>
-                            <p className="card-text m-0">Distância: 0,1km</p>
+                            <p className="card-text m-0">Distância: 0km</p>
                             <p className="card-text m-0">Idade: {(dog.years === 1) ? `${dog.years} ano`:""} {(dog.years > 1) ? `${dog.years} anos`: ""} {(dog.years && dog.months) ? " e ": ""} {(dog.months === 1) ? `${dog.months} mês` : ""}  {(dog.months > 1) ? `${dog.months} meses` : ""}</p>
                             <p className="card-text fs-5">{dog.details}</p>
                           </div>

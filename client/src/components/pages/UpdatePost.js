@@ -5,7 +5,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 
 export default function UpdatePost() {
     const [animal, setAnimal] = useState({});
-    const [age, setAge] = useState({"years": 0, "months": 0});
     const [files, setFiles] = useState([]);
 
     const navigate = useNavigate();
@@ -17,7 +16,7 @@ export default function UpdatePost() {
 
     function updatePost(e) {
         e.preventDefault()
-        axios.post(`/api/update/${animal.id}/`, {"name": animal.name, "category": animal.category, "years": age.years, "months": age.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating} ,{ headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} })
+        axios.post(`/api/update/${animal.id}/`, {"name": animal.name, "category": animal.category, "years": animal.years, "months": animal.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating} ,{ headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} })
         .then(res => { handleUpload(res.data.id); navigate(`/perfil`) } )
         .catch(err => {if (err.response.data.msg === "Missing Authorization Header") {
             console.log(err.response.data.msg);
@@ -42,14 +41,20 @@ export default function UpdatePost() {
                 console.log(file)
                 formData.append("file", file);
             })
-        }
+        }  
         console.log(formData)
         await axios.post(`/api/upload_image/${animal.id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } )
-    }  
+    }
 
     function handleUploadChange(e) {
       const targetFiles = e.target.files;
-      const targetFilesObject= [...targetFiles]
+      console.log(targetFiles)
+      let targetFilesObject = []
+      if (targetFiles.length < 4) {
+          targetFilesObject = [...targetFiles]
+      } else if (targetFiles > 3) {
+          window.alert("Por favor, selecione até 3 imagens.")
+      }
       setFiles(targetFilesObject);
     }
 
@@ -74,24 +79,19 @@ export default function UpdatePost() {
             case "kind_rating":
                 setAnimal({...animal, kind_rating: e})
                 break
+            case "years":
+                setAnimal({...animal, years: e.target.value})
+                break
+            case "months":
+                setAnimal({...animal, months: e.target.value})
+                break
             default:
                 break
         }
     }
-
-
-    function handleAgeChange(e, t) {
-        e.preventDefault();
-        if (t === "years") {
-            setAge({...age, years: e.target.value});
-        } else if (t === "months") {
-            setAge({...age, months: e.target.value});
-        }
-    }
-
     
 
     return (<>
-        <Post handlePost={updatePost} handleDeletePost={handleDeletePost} handleAnimalChange={handleAnimalChange} handleAgeChange={handleAgeChange} handleUploadChange={handleUploadChange} handleUpload={handleUpload} animal={animal} age={age} files={files}/>
+        <Post handlePost={updatePost} handleDeletePost={handleDeletePost} handleAnimalChange={handleAnimalChange} handleUploadChange={handleUploadChange} handleUpload={handleUpload} animal={animal} files={files}/>
     </>)
     }

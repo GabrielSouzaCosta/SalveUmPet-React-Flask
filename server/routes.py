@@ -33,6 +33,10 @@ def refresh_expiring_jwts(response):
         # Case where there is not a valid JWT. Just return the original respone
         return response
 
+@app.route('/')
+def index():
+    return "Olá, este é a api do website salve um pet"
+
 @app.route('/api/register', methods=['POST'])
 def register():
     email = request.json.get('email')

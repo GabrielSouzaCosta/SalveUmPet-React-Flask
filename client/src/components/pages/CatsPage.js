@@ -19,8 +19,8 @@ export default function CatsPage() {
 
   return (
     <>
-    <Navbar />
     <div className="vh-100">
+    <Navbar />
       
     <div className="container-fluid h-100">
         <h1 className='display-4 text-center mb-5 pt-2 fw-bolder'>Gatinhos para salvar próximo de você: Pouso Alegre</h1>
@@ -37,7 +37,7 @@ export default function CatsPage() {
                               <img className="card-img-top h-100" src={cat.image} alt=""/>
                              </div> 
                           </Link>
-                            <p className="card-text m-0">Distância: 0,1km</p>
+                            <p className="card-text m-0">Distância: 0km</p>
                             <p className="card-text m-0">Idade: {(cat.years === 1) ? `${cat.years} ano`:""} {(cat.years > 1) ? `${cat.years} anos`: ""} {(cat.years && cat.months) ? " e ": ""} {(cat.months === 1) ? `${cat.months} mês` : ""}  {(cat.months > 1) ? `${cat.months} meses` : ""}</p>
                             <p className="card-text fs-5">{cat.details}</p>
                           </div>
@@ -56,11 +56,11 @@ export default function CatsPage() {
                 
 
                 
-    </div>
-
-
-    </div>
     <Footer />
+    </div>
+
+
+    </div>
     </>
   )
 }

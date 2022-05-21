@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 function NewPost() {
-    const [animal, setAnimal] = useState({name: "", category: "", details: "", cute_rating: 90, playful_rating: 85, kind_rating: 100})
-    const [age, setAge] = useState({"years": 0, "months": 0});
+    const [animal, setAnimal] = useState({name: "", category: "", details: "", cute_rating: 90, playful_rating: 85, kind_rating: 100, years: 0, months: 0})
     const [files, setFiles] = useState([]);
 
     const navigate = useNavigate();
@@ -25,7 +24,7 @@ function NewPost() {
 
     async function handleNewPost(e) {
         e.preventDefault()
-        await axios.post('/api/add_post', {"name": animal.name, "category": animal.category, "years": age.years, "months": age.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } })
+        await axios.post('/api/add_post', {"name": animal.name, "category": animal.category, "years": animal.years, "months": animal.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } })
         .then(res => { handleUpload(res.data.id); navigate(`/perfil`) } )
         .catch(err => {if (err.response.data.msg === "Missing Authorization Header") {
             console.log(err.response.data.msg);
@@ -42,7 +41,7 @@ function NewPost() {
     }
 
     function handleAnimalChange(e, property) {
-
+        console.log(e.target.value)
         switch (property) {
             case "name":
                 setAnimal({...animal, name: e.target.value})
@@ -62,22 +61,19 @@ function NewPost() {
             case "kind_rating":
                 setAnimal({...animal, kind_rating: e})
                 break
+            case "years":
+                setAnimal({...animal, years: e.target.value})
+                break
+            case "months":
+                setAnimal({...animal, months: e.target.value})
+                break
             default:
                 break
         }
     }
 
-    function handleAgeChange(e, t) {
-        e.preventDefault();
-        if (t === "years") {
-            setAge({...age, years: e.target.value});
-        } else if (t === "months") {
-            setAge({...age, months: e.target.value});
-        }
-    }
-
   return (<>
-    <Post handleUploadChange={handleUploadChange} handlePost={handleNewPost} handleUpload={handleUpload} handleAnimalChange={handleAnimalChange} handleAgeChange={handleAgeChange} animal={animal} age={age} files={files} />
+    <Post handleUploadChange={handleUploadChange} handlePost={handleNewPost} handleUpload={handleUpload} handleAnimalChange={handleAnimalChange} animal={animal} files={files} />
   </>
   )
 }
