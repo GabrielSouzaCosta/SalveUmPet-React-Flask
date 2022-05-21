@@ -38,9 +38,9 @@ function Post(props) {
             <input className='form-control w-25 mb-3' value={props.animal.name} onChange={(e)=> props.handleAnimalChange(e, "name")} id='name' required></input>
                     <div className='d-flex align-items-center justify-content-center' onChange={(e) => props.handleAnimalChange(e, "category")} > 
                     <input style={{backgroundColor:"black"}} type="radio" id="cat" name="drone" value="gato"/>
-                    <label htmlFor="cat" className='mx-1'><img style={{width: "50px"}} alt="escolher gato" src='/assets/images/gato.png'/></label> 
+                    <label htmlFor="cat" className='mx-1'><img style={{width: "50px"}} alt="escolher gato" src={`${process.env.PUBLIC_URL}/assets/images/gato.png`} /></label> 
                     <input type="radio" id="dog" name="drone" value="dog"/>
-                    <label htmlFor="dog" className="ms-1"><img style={{width: "50px"}} alt="escolher cachorro" src='/assets/images/dog.png'/></label>
+                    <label htmlFor="dog" className="ms-1"><img style={{width: "50px"}} alt="escolher cachorro" src={`${process.env.PUBLIC_URL}/assets/images/dog.png`} /></label>
                     </div>
             <label className='my-2' htmlFor='age'>Idade:</label>
             <div className='d-flex justify-content-center align-items-center w-25 mt-1' id='age'>

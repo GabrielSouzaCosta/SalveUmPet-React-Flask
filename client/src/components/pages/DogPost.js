@@ -16,12 +16,12 @@ export default function DogPost() {
 
   async function handleAdoption() {
     console.log(dog)
-    await axios.post('/api/add_interest/', {"id": dog.id, "owner": dog.owner}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); navigate('/perfil')})
+    await axios.post(process.env.REACT_APP_SERVER_URL+'/api/add_interest/', {"id": dog.id, "owner": dog.owner}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); navigate('/perfil')})
   }
 
   useEffect(() => {
     async function getdog() {
-      await axios.get(`/api/animals/${params.id}/`)
+      await axios.get(process.env.REACT_APP_SERVER_URL+`/api/animals/${params.id}/`)
       .then(res => {setImages(res.data.images); setdog(res.data)} );
     }
     getdog();
@@ -65,7 +65,7 @@ export default function DogPost() {
                     }) : 
                     <div className="carousel-item active">
                         <div style={{height:"600px"}} className='w-100 d-flex align-items-center'>
-                        <img style={{width: "90%"}} className="d-block h-100 w-md-75 w-lg-50 m-auto" src="/assets/images/nophotodog.png" alt="animal"/>
+                        <img style={{width: "90%"}} className="d-block h-100 w-md-75 w-lg-50 m-auto" src={`${process.env.PUBLIC_URL}/assets/images/nophotodog.png`} alt="animal"/>
                         </div>
                     </div> 
                     }

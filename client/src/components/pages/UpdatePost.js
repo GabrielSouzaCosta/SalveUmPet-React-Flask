@@ -11,7 +11,7 @@ export default function UpdatePost() {
     const params = useParams();
     
     useEffect(() => {
-        axios.get(`/api/animals/${params.id}`).then(res => {console.log(res); setAnimal(res.data)})
+        axios.get(process.env.REACT_APP_SERVER_URL+`/api/animals/${params.id}`).then(res => {console.log(res); setAnimal(res.data)})
     }, [params.id])
 
     function updatePost(e) {
@@ -30,7 +30,7 @@ export default function UpdatePost() {
         e.preventDefault();
         let excluir = window.confirm("Quer mesmo excluir a postagem?");
         if (excluir) {
-            axios.delete(`/api/delete/${animal.id}/`, { headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} } ).then(res => navigate('/perfil'));
+            axios.delete(process.env.REACT_APP_SERVER_URL+`/api/delete/${animal.id}/`, { headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} } ).then(res => navigate('/perfil'));
         }
     }
 
@@ -43,7 +43,7 @@ export default function UpdatePost() {
             })
         }  
         console.log(formData)
-        await axios.post(`/api/upload_image/${animal.id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } )
+        await axios.post(process.env.REACT_APP_SERVER_URL+`/api/upload_image/${animal.id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } )
     }
 
     function handleUploadChange(e) {

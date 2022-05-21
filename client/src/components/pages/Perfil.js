@@ -9,12 +9,12 @@ export default function Perfil() {
     const [interests, setInterests] = useState([])
 
     useEffect(() => {
-        axios.get('/api/profile', {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} }).then(res => {setUser(res.data); setInterests(res.data.interests)} );
+        axios.get(process.env.REACT_APP_SERVER_URL+'/api/profile', {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} }).then(res => {setUser(res.data); setInterests(res.data.interests)} );
     }, [])
 
     async function handleDeleteInterest(e, id) {
       e.preventDefault();
-      await axios.delete(`/api/remove_interest/${id}/`, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} } )
+      await axios.delete(process.env.REACT_APP_SERVER_URL+`/api/remove_interest/${id}/`, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} } )
       .then(res => setInterests(interests.filter((interest) => {
         if (interest.animal_id !== res.data.animal_id) {
           console.log(interest);
@@ -33,7 +33,7 @@ export default function Perfil() {
     async function uploadPhoto(e) {
         var formData = new FormData();
         formData.append("profile_photo", photo);
-        await axios.post(`/api/upload_image/${user.id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") }} )
+        await axios.post(process.env.REACT_APP_SERVER_URL+`/api/upload_image/${user.id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") }} )
     }    
     
   return (
@@ -43,7 +43,7 @@ export default function Perfil() {
         <div className='d-flex flex-column align-items-center pt-4'>
         {(user.photo) ?
                   <input type="image" src={user.photo} className='border mb-2'  height={"300px"} alt="profile" data-bs-toggle="modal" data-bs-target="#photoModal" /> :
-                  <input type="image" src="/assets/images/blank_profile.png" className='border mb-2' height={"300px"} alt="profile" data-bs-toggle="modal" data-bs-target="#photoModal" ></input>
+                  <input type="image" src={`${process.env.PUBLIC_URL}/assets/images/blank_profile.png`} className='border mb-2' height={"300px"} alt="profile" data-bs-toggle="modal" data-bs-target="#photoModal" ></input>
                 }
           
           <div className='d-flex flex-row align-items-center text-justify'>
@@ -114,7 +114,7 @@ export default function Perfil() {
                                   </div>
                                   :
                                   <div style={{height: "400px"}} className='d-flex align-items-center'>
-                                    <img key={`image-${animal.id}`}  className="card-img-top h-100" src={`assets/images/nophoto${animal.category}.png`} alt="animal"/>
+                                    <img key={`image-${animal.id}`}  className="card-img-top h-100" src={`${process.env.PUBLIC_URL}/assets/images/nophoto${animal.category}.png`} alt="animal"/>
                                   </div>
                                 }
                               </Link>
@@ -146,7 +146,7 @@ export default function Perfil() {
                 {(photo) ? <img src={URL.createObjectURL(photo)} className='border mb-2'  width={"300px"} alt="profile" /> 
                   : ""
                 }
-                {(!photo && !user.photo) ? <img src="/assets/images/blank_profile.png" className='border mb-2' height={"300px"} alt="profile" />: ""}
+                {(!photo && !user.photo) ? <img src={`${process.env.PUBLIC_URL}/assets/images/blank_profile.png`} className='border mb-2' height={"300px"} alt="profile" />: ""}
                 <label htmlFor='photo' className='btn btn-warning'>Trocar foto</label>
                 <input className='d-none' type="file" id='photo' onChange={handleUploadChange}></input>
               </div>

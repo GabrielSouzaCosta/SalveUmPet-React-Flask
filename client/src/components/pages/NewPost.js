@@ -19,12 +19,12 @@ function NewPost() {
             })
         }
         console.log(formData)
-        await axios.post(`/api/upload_image/${id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } )
+        await axios.post(process.env.REACT_APP_SERVER_URL+`/api/upload_image/${id}`, formData, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } } )
     }
 
     async function handleNewPost(e) {
         e.preventDefault()
-        await axios.post('/api/add_post', {"name": animal.name, "category": animal.category, "years": animal.years, "months": animal.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } })
+        await axios.post(process.env.REACT_APP_SERVER_URL+'/api/add_post', {"name": animal.name, "category": animal.category, "years": animal.years, "months": animal.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating}, {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } })
         .then(res => { handleUpload(res.data.id); navigate(`/perfil`) } )
         .catch(err => {if (err.response.data.msg === "Missing Authorization Header") {
             console.log(err.response.data.msg);

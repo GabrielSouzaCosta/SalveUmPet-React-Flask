@@ -15,12 +15,12 @@ export default function CatPost() {
   const navigate = useNavigate();
   
   async function handleAdoption() {
-    await axios.post(`/api/add_interest/`, {"id": cat.id, "owner": cat.owner} ,{headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); navigate('/perfil')})
+    await axios.post(process.env.REACT_APP_SERVER_URL+`/api/add_interest/`, {"id": cat.id, "owner": cat.owner} ,{headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token") } }).then(res => {console.log(res); navigate('/perfil')})
   }
   
   useEffect(() => {
     async function getCat() {
-      await axios.get(`/api/animals/${params.id}`)
+      await axios.get(process.env.REACT_APP_SERVER_URL+`/api/animals/${params.id}`)
       .then(res => {setImages(res.data.images); setCat(res.data)}  );
     }
     getCat();
@@ -64,7 +64,7 @@ export default function CatPost() {
                     }) : 
                       <div className="carousel-item active">
                           <div style={{height:"600px"}} className='w-100 d-flex align-items-center'>
-                            <img style={{width: "70%"}} className="d-block h-100 w-md-75 w-lg-50 m-auto" src="/assets/images/nophotogato.png" alt="animal"/>
+                            <img style={{width: "70%"}} className="d-block h-100 w-md-75 w-lg-50 m-auto" src={`${process.env.PUBLIC_URL}/assets/images/nophotogato.png`} alt="animal"/>
                           </div>
                       </div> 
                     }

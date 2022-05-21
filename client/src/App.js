@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Route, Routes } from 'react-router-dom';
 
 import Home from './components/pages/Home';
 import CatsPage from './components/pages/CatsPage';
@@ -16,9 +16,9 @@ function App() {
 
   return (
 
-      <BrowserRouter basename='SalveUmPet-Client'>
+      <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route exact path='/' element={<Home />} />
           <Route path='/gatos' element={<CatsPage />} />
           <Route path='/gatos/:id' element={<CatPost />} />
           <Route path='/dogs' element={<DogsPage />} />

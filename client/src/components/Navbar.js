@@ -18,17 +18,17 @@ function Navbar () {
     return (<>
             <nav  className="navbar navbar-expand-lg sticky-top p-0 w-100">
                 <div style={{backgroundColor: "#e98a15ff"}} className="container-fluid w-100 h-100">
-                    <NavLink to="/" className={"navbar-brand"}><img height={"30px"} alt="logo" className="pb-1" src="/assets/images/logo.png"/></NavLink>
+                    <NavLink to="/" className={"navbar-brand"}><img height={"30px"} alt="logo" className="pb-1" src={`${process.env.PUBLIC_URL}/assets/images/logo.png`}/></NavLink>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
                         <ul className="navbar-nav me-sm-auto">
                             <li className="nav-item">
-                                <NavLink to="/gatos" className={"nav-link link-dark fw-bold fs-5"}><img height={"30px"} src="/assets/images/gato.png" alt="" />Salve um Gato</NavLink>
+                                <NavLink to="/gatos" className={"nav-link link-dark fw-bold fs-5"}><img height={"30px"} src={`${process.env.PUBLIC_URL}/assets/images/gato.png`} alt="" />Salve um Gato</NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/dogs" className={"nav-link link-dark fw-bold fs-5"} >Salve um Dog <img height={"30px"} src="/assets/images/dog.png" alt="" /></NavLink>
+                                <NavLink to="/dogs" className={"nav-link link-dark fw-bold fs-5"} >Salve um Dog <img height={"30px"} src={`${process.env.PUBLIC_URL}/assets/images/dog.png`} alt="" /></NavLink>
                             </li>
                         </ul>
                         <div className="d-flex">

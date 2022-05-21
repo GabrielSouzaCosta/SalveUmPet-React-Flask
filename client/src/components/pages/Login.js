@@ -24,7 +24,7 @@ export default function Login() {
             setMsg("Please provide a password.")
             return
           }
-        await axios.post('/api/login', {"email":email, "password":password})
+        await axios.post(process.env.REACT_APP_SERVER_URL+'/api/login', {"email":email, "password":password})
         .then(res => {
             if (res.status === 200) {
             setMsg("Logging in...");

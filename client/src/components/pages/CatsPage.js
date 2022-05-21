@@ -7,7 +7,7 @@ export default function CatsPage() {
   const [cats, setCats] = useState([])
   
   useEffect(() => {
-    fetch('/api/animals/cats', {
+    fetch(process.env.REACT_APP_SERVER_URL+'/api/animals/cats', {
       'method': 'GET',
       headers: {
         'Content-type': 'application/json'

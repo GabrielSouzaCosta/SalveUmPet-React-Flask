@@ -26,7 +26,7 @@ function Register() {
           setMsg("Please provide a password.")
           return
         }
-      await axios.post('/api/register', {"email":email, "password":password, "name": name})
+      await axios.post(process.env.REACT_APP_SERVER_URL+'/api/register', {"email":email, "password":password, "name": name})
       .then(res => {
           if (res.status === 200) {
           setMsg("LOADING...");
