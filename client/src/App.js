@@ -16,7 +16,7 @@ function App() {
 
   return (
 
-      <BrowserRouter>
+      <BrowserRouter basename='SalveUmPet-Client'>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/gatos' element={<CatsPage />} />

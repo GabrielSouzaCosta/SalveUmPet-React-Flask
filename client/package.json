@@ -2,7 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://GabrielSouzaCosta.github.io/SaveAPet-react",
+  "homepage": "https://GabrielSouzaCosta.github.io",
   "proxy": "http://localhost:5000",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.1.1",
