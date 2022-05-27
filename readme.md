@@ -7,10 +7,10 @@
 
 
 <h2>Página Inicial<h2>
-<img src="public/assets/images/github-images/home.png" width=100% > <br>
+<img src="client/public/assets/images/github-images/home.png" width=100% > <br>
 
 <h2>Perfil</h2>
-<img src="public/assets/images/github-images/perfil.png" width=100% >
+<img src="client/public/assets/images/github-images/perfil.png" width=100% >
 
 <h2>Página de Registro<h2>
-<img src="public/assets/images/github-images/register.png" width=100% >
+<img src="client/public/assets/images/github-images/register.png" width=100% >
