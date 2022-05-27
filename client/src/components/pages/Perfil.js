@@ -1,12 +1,18 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../Navbar';
 
 export default function Perfil() {
     const [user, setUser] = useState({});
     const [photo, setPhoto] = useState("");
-    const [interests, setInterests] = useState([])
+    const [interests, setInterests] = useState([]);
+    const navigate = useNavigate();
+
+    useEffect(()=>{
+      if(!sessionStorage.getItem("token")) {
+          navigate('/')
+    }}, [])
 
     useEffect(() => {
         axios.get(process.env.REACT_APP_SERVER_URL+'/api/profile', {headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} }).then(res => {setUser(res.data); setInterests(res.data.interests)} );
@@ -67,7 +73,7 @@ export default function Perfil() {
                         <div className="card mb-2 d-flex justify-content-center">
                           <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-header text-center fs-4 fw-bold p-1'>
                             {animal.name}
-                            <Link to={`/atualizar_post/${animal.id}`} style={{color: "rgb(252, 222, 102)"}} className={"btn btn-dark float-end"}>Editar</Link>
+                            <Link to={`/atualizar_post/${animal.id}`} style={{color: "rgb(252, 222, 102)"}} className={"btn btn-dark ms-2 float-md-end"}>Editar</Link>
                           </div>
                           <div className="card-body text-center fs-5 p-0">
                             <Link to={`/${animal.category}s/${animal.id}`} key={`link-${animal.id}`}>
@@ -81,10 +87,6 @@ export default function Perfil() {
                               </div>
                               }
                             </Link>
-                            <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-footer' key={`description-${animal.id}`} >
-                              <p className="card-text m-0">Idade: {(animal.years === 1) ? `${animal.years} ano`:""} {(animal.years > 1) ? `${animal.years} anos`: ""} {(animal.years && animal.months) ? " e ": ""} {(animal.months === 1) ? `${animal.months} mês` : ""}  {(animal.months > 1) ? `${animal.months} meses` : ""}</p>
-                              <p className="card-text fs-5">{animal.details}</p>
-                            </div>
                           </div>
                         </div>
                       </div>
@@ -104,7 +106,7 @@ export default function Perfil() {
                           <div className="card mb-2 ms-2">
                             <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-header text-center fs-4 fw-bold p-1'>
                               {animal.name}
-                              <button style={{color: "rgb(252, 222, 102)"}} onClick={(e) => handleDeleteInterest(e, animal.id)} className='btn btn-dark float-end'>Remover interesse</button>
+                              <button style={{color: "rgb(252, 222, 102)"}} onClick={(e) => handleDeleteInterest(e, animal.id)} className='btn btn-dark float-md-end'>Remover interesse</button>
                             </div>
                             <div className="card-body text-center fs-5 p-0">
                               <Link to={`/${animal.category}s/${animal.id}`} key={`link-${animal.id}`}>
@@ -118,10 +120,6 @@ export default function Perfil() {
                                   </div>
                                 }
                               </Link>
-                              <div style={{backgroundColor: "rgb(252, 222, 102)"}} className='card-footer' key={`description-${animal.id}`} >
-                                <p className="card-text m-0">Idade: {(animal.years === 1) ? `${animal.years} ano`:""} {(animal.years > 1) ? `${animal.years} anos`: ""} {(animal.years && animal.months) ? " e ": ""} {(animal.months === 1) ? `${animal.months} mês` : ""}  {(animal.months > 1) ? `${animal.months} meses` : ""}</p>
-                                <p className="card-text fs-5">{animal.details}</p>
-                              </div>
                             </div>
                           </div>
                         </div>

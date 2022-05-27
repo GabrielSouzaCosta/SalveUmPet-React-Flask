@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Navbar';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Register() {
@@ -15,7 +15,7 @@ function Register() {
     useEffect(()=>{
         if(sessionStorage.getItem("token")) {
             navigate('/perfil')
-    }})
+    }}, [])
 
     async function register() {
       if (emailValidation() === false) {
@@ -60,38 +60,38 @@ function Register() {
 
   return (
     <>
-    <div style={{backgroundColor: "#E89291"}} className='d-flex flex-column vh-100'>
     <Navbar/>
-      <div className='d-flex mw-100 align-items-center justify-content-center h-100'>
-          <div className="card shadow-lg d-flex flex-column mw-100 justify-content-center align-items-center py-5 px-5">
-              
-              <h1 className="pt-4 pb-4 display-5">REGISTRAR-SE</h1>
-              <form className='form' onSubmit={(e) => e.preventDefault()}>
-                <div className='d-flex flex-column justify-content-center text-center w-100 px-1'>
-                  <label htmlFor="email">Email:</label>
-                  <input className="form-control form-control-sm my-2" type="email" id='email' required value={email} onChange={(e) => setEmail(e.target.value)}></input>
-                  <label htmlFor="name">Nome Completo:</label>
-                  <input className="form-control form-control-sm my-2" type="text" id='name' required value={name} onChange={(e) => setName(e.target.value)}></input>
-                  <label htmlFor="pwd" >Senha:</label>
-                  <input className="form-control form-control-sm my-2" type="password" id="pwd" required value={password} onChange={(e) => setPassword(e.target.value)} ></input>
-                  <div id="passwordHelpBlock" className="form-text mb-3">
-                    Sua senha deve conter no mínimo 8 caracteres
+    <div style={{backgroundColor: "#E89291"}} className='container-fluid vh-100 justify-content-center position-absolute top-0'>
+      <div className="row d-flex justify-content-center align-items-center h-100">
+        <div className="col-12 col-sm-12 col-md-8 col-lg-3">
+          <div className="card">
+            <div className="card-body text-center">
+                <h1 className='display-3 py-3'>Registrar</h1>
+                <div className='row justify-content-center'>
+                  <div className="col-8 col-md-8 col-sm-auto col-lg-10">
+                    <label className="form-label align-self-start" htmlFor="email">E-mail</label>
+                    <input className='form-control mb-2' type="email" id='email' onChange={(e)=>setEmail(e.target.value)} required placeholder="brucewayne@batmail.com..." />
+                    <label className="form-label align-self-start" htmlFor="name">Nome</label>
+                    <input className='form-control mb-2' type="text" id='name' onChange={(e)=>setName(e.target.value)} required placeholder="Nome Completo..." />
                   </div>
-                  <button className="my-2 btn btn-danger" type="submit" onClick={register}>Criar Conta</button>
                 </div>
-              </form>
-              
-              <Link to="/login">Já possui uma conta?</Link>
-              <div id="passwordHelpBlock" className="form-text mb-3 ">
+                <div className="row justify-content-center">
+                  <div className='col-8 col-md-8 col-sm-auto col-lg-10'>
+                      <label className='form-label' htmlFor="password">Senha</label>
+                      <input className='form-control' type="password" id='password' onChange={(e)=>setPassword(e.target.value)} required placeholder='**************************' aria-describedby="passwordHelpBlock"></input>
+                  </div>
+                  <div id="passwordHelpBlock" className="form-text pb-3">
                       {msg}
-              </div>
-
-                
-
+                  </div>
+                </div>
+                <p><button className='btn btn-primary' type="submit" onClick={register}>Entrar</button></p>
+                <p><NavLink className={"pt-3 link-primary mb-5"} to="/login">Já possui uma conta?</NavLink></p>
+                </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-</>
+        </>
   )
 }
 

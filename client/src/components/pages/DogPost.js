@@ -28,12 +28,11 @@ export default function DogPost() {
   }, [params.id]);
 
   return (
-    <div className='vh-100'>
-      
+      <>
       <Navbar />  
-      <div style={{backgroundColor: "#222222"}} className='container-fluid d-flex flex-column h-100 w-100'>
-        <div className='d-flex flex-column flex-lg-row align-items-center pt-3 pt-md-3 pt-lg-0 h-100'>
-          <div id="carousel-pet" className="carousel slide w-100 w-md-75 w-lg-75" data-bs-ride="carousel">
+      <div style={{backgroundColor: "#222222"}} className='container-fluid d-flex flex-column justify-content-center w-100 min-vh-100'>
+        <div className='d-flex flex-column flex-lg-row align-items-center pt-3 pt-md-3 pt-lg-0'>
+          <div id="carousel-pet" className="carousel slide w-100 h-100 w-md-75 w-lg-75" data-bs-ride="carousel">
                 <div className="carousel-indicators">
                     {images.map((img, i) => {
                       return (
@@ -83,12 +82,12 @@ export default function DogPost() {
                 </button>
         </div>
 
-            <div className='text-white m-auto p-5 w-100'>
-              <h1 className='display-4 text-center pb-4'>{dog.name}</h1>
-              <p className='fs-3'>Como ele é: {dog.details}</p>
-              <p className='fs-3'>Idade: {dog.years} anos e {dog.months} meses.</p> 
+            <div className='text-whitem-auto px-2 w-100 d-flex flex-column justify-content-md-center h-100'>
+              <h1 className='display-4 text-center py-2 mb-1'>{dog.name}</h1>
+              <p className='fs-4 mb-2'>Como ele é: {dog.details}</p>
+              <p className='fs-4 mb-2'>Idade: {dog.years} anos e {dog.months} meses.</p> 
               {(dog.published_date) ?
-              <p className='fs-3'>Publicado em: {dog.published_date.substring(0, 10).split('-').reverse().join("/")}</p> : ""}
+              <p className='fs-4 mb-2'>Publicado em: {dog.published_date.substring(0, 10).split('-').reverse().join("/")}</p> : ""}
              
               <div className='mb-1 fs-5'>
                 Fofinho: <Rating ratingValue={dog.cute_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
@@ -100,13 +99,15 @@ export default function DogPost() {
                   Carinhoso: <Rating ratingValue={dog.kind_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
               </div>
 
-              {(sessionStorage.getItem("token")) ?
-                <button className='btn btn-outline-warning' onClick={handleAdoption}>Quero adotar</button> :
-                <Link to="/login"><button className='btn btn-outline-warning'>Faça login para adotar</button></Link>
-              }
+              <div className='d-flex justify-content-center'>
+                {(sessionStorage.getItem("token")) ?
+                  <button className='btn btn-outline-warning' onClick={handleAdoption}>Quero adotar</button> :
+                  <Link to="/login"><button className='btn btn-outline-warning'>Faça login para adotar</button></Link>
+                }
+              </div>
             </div>
         </div>
     </div>
-  </div>
+  </>
   )
 }

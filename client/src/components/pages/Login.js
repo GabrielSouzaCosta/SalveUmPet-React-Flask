@@ -13,7 +13,7 @@ export default function Login() {
     useEffect(()=>{
         if(sessionStorage.getItem("token")) {
             navigate('/perfil')
-    }})
+    }}, [])
 
     async function login() {
         if (emailValidation() === false) {

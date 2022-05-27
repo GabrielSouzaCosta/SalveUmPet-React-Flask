@@ -11,12 +11,12 @@ export default function UpdatePost() {
     const params = useParams();
     
     useEffect(() => {
-        axios.get(process.env.REACT_APP_SERVER_URL+`/api/animals/${params.id}`).then(res => {console.log(res); setAnimal(res.data)})
+        axios.get(process.env.REACT_APP_SERVER_URL+`/api/animals/${params.id}`).then(res => {setAnimal({...res.data, is_owner: true})})
     }, [params.id])
 
     function updatePost(e) {
         e.preventDefault()
-        axios.post(`/api/update/${animal.id}/`, {"name": animal.name, "category": animal.category, "years": animal.years, "months": animal.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating} ,{ headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} })
+        axios.post(process.env.REACT_APP_SERVER_URL+`/api/update/${animal.id}/`, {"name": animal.name, "category": animal.category, "years": animal.years, "months": animal.months, "details": animal.details, "cute_rating": animal.cute_rating, "playful_rating": animal.playful_rating, "kind_rating": animal.kind_rating} ,{ headers: {"Authorization": "Bearer "+ sessionStorage.getItem("token")} })
         .then(res => { handleUpload(res.data.id); navigate(`/perfil`) } )
         .catch(err => {if (err.response.data.msg === "Missing Authorization Header") {
             console.log(err.response.data.msg);

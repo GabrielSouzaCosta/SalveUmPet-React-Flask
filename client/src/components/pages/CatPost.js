@@ -27,12 +27,11 @@ export default function CatPost() {
   }, [params.id]);
 
   return (
-    <div className='vh-100'>
-      
-      <Navbar />  
-      <div style={{backgroundColor: "#222222"}} className='container-fluid d-flex flex-column h-100 w-100'>
-        <div className='d-flex flex-column flex-lg-row align-items-center pt-3 pt-md-3 pt-lg-0 h-100'>
-          <div id="carousel-pet" className="carousel slide w-100 w-md-75 w-lg-75" data-bs-ride="carousel">
+      <>
+    <Navbar />  
+    <div style={{backgroundColor: "#222222"}} className='container-fluid d-flex flex-column justify-content-center w-100 min-vh-100'>
+        <div className='d-flex flex-column flex-lg-row align-items-center pt-3 pt-md-3 pt-lg-0'>
+          <div id="carousel-pet" className="carousel slide w-100 h-100 w-md-75 w-lg-75" data-bs-ride="carousel">
                 <div className="carousel-indicators">
                     {images.map((img, i) => {
                       return (
@@ -44,7 +43,7 @@ export default function CatPost() {
                 </div>
                 <div className="carousel-inner">
                     {(images.length > 0) ? images.map((img, index) => {
-                        if (index === 0) {
+                      if (index === 0) {
                           return (
                             <div className="carousel-item active" key={`item-${index}`}>
                               <div style={{height:"600px"}} className='w-100 d-flex align-items-center'>
@@ -82,12 +81,13 @@ export default function CatPost() {
                 </button>
         </div>
 
-            <div className='text-white m-auto p-5 w-100'>
-              <h1 className='display-4 text-center pb-4'>{cat.name}</h1>
-              <p className='fs-3'>Como ele é: {cat.details}</p>
-              <p className='fs-3'>Idade: {cat.years} anos e {cat.months} meses.</p> 
+            <div className='text-white m-auto px-2 w-100 d-flex flex-column justify-content-md-center h-100'>
+              
+              <h1 className='display-4 text-center py-2 mb-1'>{cat.name}</h1>
+              <p className='fs-4 mb-2'>Como ele é: {cat.details}</p>
+              <p className='fs-4 mb-2'>Idade: {cat.years} anos e {cat.months} meses.</p> 
               {(cat.published_date) ?
-              <p className='fs-3'>Publicado em: {cat.published_date.substring(0, 10).split('-').reverse().join("/")}</p> : ""}
+              <p className='fs-4 mb-2'>Publicado em: {cat.published_date.substring(0, 10).split('-').reverse().join("/")}</p> : ""}
              
               <div className='mb-1 fs-5'>
                 Fofinho: <Rating ratingValue={cat.cute_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
@@ -98,14 +98,15 @@ export default function CatPost() {
               <div className='mb-3 fs-5'>
                   Carinhoso: <Rating ratingValue={cat.kind_rating} readonly emptyIcon={<FontAwesomeIcon icon={faPaw} />} fullIcon={<FontAwesomeIcon icon={faPaw} />}  />
               </div>
-
+              <div className='d-flex justify-content-center'>
               {(sessionStorage.getItem("token"))?
-                <button className='btn btn-outline-warning' onClick={handleAdoption}>Quero adotar</button> :
-                <Link to="/login"><button className='btn btn-outline-warning'>Faça login para adotar</button></Link>
+                <button className='btn btn-outline-warning w-auto my-2' onClick={handleAdoption}>Quero adotar</button> :
+                <Link to="/login"><button className='btn btn-outline-warning w-auto my-3'>Faça login para adotar</button></Link>
               }
+              </div>
             </div>
         </div>
     </div>
-  </div>
+    </>
   )
 }
