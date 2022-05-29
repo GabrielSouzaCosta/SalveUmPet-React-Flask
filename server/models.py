@@ -1,33 +1,34 @@
-from email.policy import default
-from hmac import compare_digest
+from sqlalchemy.ext.hybrid import hybrid_property
 from app import app
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_marshmallow import Marshmallow
+from app import bcrypt
+
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
-# Database Models
+
 class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String)
     name = db.Column(db.String(80))
-    password = db.Column(db.String)
     createdAt = db.Column(db.DateTime, default=datetime.now)
     animals = db.relationship('Animal', backref='user', lazy=True)
     files = db.relationship('ProfilePhoto', cascade='all, delete', backref="user", lazy=True)
     favorites = db.relationship('Favorite', cascade='all, delete', backref="user")
+    password_hash = db.Column(db.String(128))
 
     def __init__(self, email, name, password):
         self.email = email
         self.name = name
-        self.password = password
+        self.password_hash = bcrypt.generate_password_hash(password).decode('UTF-8')    
 
-    def check_password(self, input_password):
-        return compare_digest(input_password, self.password)
+    def check_password_hash(self, password): 
+       return bcrypt.check_password_hash(self.password_hash, password)
 
 class Animal(db.Model):
     id = db.Column(db.Integer, primary_key=True)

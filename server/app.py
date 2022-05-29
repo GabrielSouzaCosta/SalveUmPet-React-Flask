@@ -4,9 +4,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 import boto3, botocore
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
 app.config.from_object('config')
+
+bcrypt = Bcrypt(app)
 
 s3 = boto3.client(
    "s3",
@@ -32,7 +35,6 @@ def upload_file_to_s3(file, bucket_name, acl="public-read"):
 
 from models import db
 from routes import app
-
 
 
 

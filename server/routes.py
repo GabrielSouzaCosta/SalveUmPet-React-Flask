@@ -1,10 +1,9 @@
 from datetime import datetime, timezone, timedelta
-import email
 from werkzeug.utils import secure_filename
 from flask import Flask, jsonify, redirect, request
-from app import app, s3, upload_file_to_s3
-from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, current_user, set_access_cookies, get_jwt
 from models import *
+from app import app, s3, upload_file_to_s3, bcrypt
+from flask_jwt_extended import JWTManager, create_access_token, get_jwt_identity, jwt_required, current_user, set_access_cookies, get_jwt
 
 jwt = JWTManager(app)
 
@@ -63,7 +62,7 @@ def login():
     email = request.json.get('email', None)
     password = request.json.get('password', None)
     user = User.query.filter_by(email=email).one_or_none()
-    if not user or not user.check_password(password):
+    if not user or not user.check_password_hash(password):
         msg = "Email ou senha incorreto"
         return {"msg": msg}, 401
 
